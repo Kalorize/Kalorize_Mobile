@@ -12,7 +12,7 @@ class ApiRepository(private val apiService: ApiService) {
         return apiService.login(body)
     }
 
-    suspend fun register(body: RegisterBody): RegisterResponse {
+    suspend fun register(body: RegisterBody): Result<RegisterResponse> {
         return apiService.register(body)
     }
 }

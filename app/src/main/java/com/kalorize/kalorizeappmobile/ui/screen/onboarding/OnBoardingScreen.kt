@@ -162,7 +162,8 @@ fun OnBoardingPager(
                     if (pagerState.currentPage != 2) {
                         TextButton(
                             onClick = {
-                                //skip
+                                navHostController.popBackStack()
+                                navHostController.navigate(Screen.Login.route)
                             }
                         ) {
                             Text(
@@ -181,6 +182,7 @@ fun OnBoardingPager(
                     } else {
                         Button(
                             onClick = {
+                                navHostController.popBackStack()
                                 navHostController.navigate(Screen.Login.route)
                             },
                             modifier = Modifier.fillMaxWidth(),

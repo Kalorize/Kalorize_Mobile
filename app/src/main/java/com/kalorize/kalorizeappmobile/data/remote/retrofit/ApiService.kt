@@ -24,7 +24,7 @@ interface ApiService {
     @POST("v1/auth/register")
     suspend fun register(
         @Body body: RegisterBody
-    ): RegisterResponse
+    ): Result<RegisterResponse>
 
     @Headers("Content-Type: application/json")
     @GET("v1/auth/forgot-password")

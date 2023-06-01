@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.ui.navigation
 
+import RegisterScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -35,6 +36,10 @@ fun SetupNavGraph(
 
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController)
+        }
+
+        composable(route = Screen.Register.route) {
+            RegisterScreen(navHostController = navController, viewModel = viewModel)
         }
     }
 }

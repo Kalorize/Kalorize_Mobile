@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kalorize.kalorizeappmobile.data.remote.ApiRepository
 import com.kalorize.kalorizeappmobile.data.remote.body.RegisterBody
+import com.kalorize.kalorizeappmobile.data.remote.response.RegisterData
 import com.kalorize.kalorizeappmobile.data.remote.response.RegisterResponse
+import com.kalorize.kalorizeappmobile.data.remote.response.RegisterUser
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(private val apiRepository: ApiRepository) : ViewModel() {
@@ -15,7 +17,20 @@ class RegisterViewModel(private val apiRepository: ApiRepository) : ViewModel() 
 
     fun doRegister(body: RegisterBody){
         viewModelScope.launch {
-            _register.postValue(apiRepository.register(body))
+
+            apiRepository.register(body).onSuccess {
+                _register.postValue(it)
+            }.onFailure {
+                _register.postValue(RegisterResponse(
+                    status = it.message.toString(),
+                    registerData = RegisterData(
+                        RegisterUser(
+                            id = -1,
+                            email = ""
+                        )
+                    )
+                ))
+            }
         }
     }
 }

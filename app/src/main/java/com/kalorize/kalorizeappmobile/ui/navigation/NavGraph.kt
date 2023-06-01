@@ -8,6 +8,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.kalorize.kalorizeappmobile.ui.screen.AnimatedSplashScreen
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @OptIn(ExperimentalPagerApi::class)
@@ -29,7 +30,11 @@ fun SetupNavGraph(
         }
         
         composable(route = Screen.Login.route) {
-            LoginScreen(viewModel = viewModel)
+            LoginScreen(viewModel = viewModel, navHostController = navController)
+        }
+
+        composable(route = Screen.Home.route) {
+            HomeScreen(navController = navController)
         }
     }
 }

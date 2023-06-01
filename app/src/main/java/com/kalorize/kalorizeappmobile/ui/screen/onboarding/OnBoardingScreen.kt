@@ -123,7 +123,7 @@ fun OnBoardingPager(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
+                .height(240.dp)
                 .align(Alignment.BottomCenter),
             shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
         ) {

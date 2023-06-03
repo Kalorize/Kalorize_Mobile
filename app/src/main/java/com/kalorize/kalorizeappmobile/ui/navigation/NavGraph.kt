@@ -53,17 +53,17 @@ fun SetupNavGraph(
         composable(
             route = Screen.Otp.route
         ) {
-            OtpScreen(navController = navController)
+            OtpScreen(navController = navController, viewModel = viewModel)
         }
         composable(
             route = Screen.ChangePassword.route
         ) {
-            ChangePasswordScreen(navController = navController)
+            ChangePasswordScreen(navController = navController, viewModel = viewModel)
         }
         composable(
             route = Screen.GetStartedChangePassword.route
         ) {
-            GetStartedChangePasswordScreen(navController = navController)
+            GetStartedChangePasswordScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

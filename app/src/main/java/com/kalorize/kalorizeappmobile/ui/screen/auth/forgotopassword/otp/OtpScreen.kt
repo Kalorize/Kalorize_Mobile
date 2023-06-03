@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.otp
 
+import android.content.Context
 import android.os.CountDownTimer
 import com.kalorize.kalorizeappmobile.R
 import android.widget.Toast
@@ -26,6 +27,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
@@ -37,15 +39,26 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
+import com.kalorize.kalorizeappmobile.data.local.UserPreference
+import com.kalorize.kalorizeappmobile.data.remote.body.RequestOtpBody
+import com.kalorize.kalorizeappmobile.data.remote.body.ValidatingOtpBody
+import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
+import com.kalorize.kalorizeappmobile.vm.MainViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun OtpScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel
 ) {
-
+    val context = LocalContext.current
+    val userPreferences = UserPreference(context)
+    val email = userPreferences.takeEmail()
+    val lifecycle = LocalLifecycleOwner.current
+    var response: SimpleResponse? = null
     val millisInFuture: Long = 300000
 
     val timeData = remember { mutableStateOf(millisInFuture) }
@@ -158,7 +171,11 @@ fun OtpScreen(
         OTPView(
             textList = textList, requesterList = requesterList,
             isPlaying = isPlaying,
-            navController = navController
+            navController = navController,
+            viewModel = viewModel,
+            email = email!!,
+            context = context,
+            lifecycle = lifecycle
         )
         Text(
             modifier = Modifier
@@ -173,7 +190,27 @@ fun OtpScreen(
             modifier = Modifier
                 .align(alignment = Alignment.CenterHorizontally)
                 .clickable {
-                    println("Resend OTP")
+                    viewModel.otpViewModel.doRequestOtp(RequestOtpBody(email = email))
+                    viewModel.otpViewModel.otpResponse.observe(lifecycle) {
+                        response = it
+                        if (response!!.status == "success") {
+                            Toast
+                                .makeText(
+                                    context,
+                                    "The OTP code has been sent, please check your email",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        } else {
+                            Toast
+                                .makeText(
+                                    context,
+                                    it.message,
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        }
+                    }
                 },
             style = TextStyle(
                 fontSize = 18.sp,
@@ -191,11 +228,14 @@ private fun OTPView(
     textList: List<MutableState<TextFieldValue>>,
     requesterList: List<FocusRequester>,
     isPlaying: MutableState<Boolean>,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MainViewModel,
+    email: String,
+    context: Context,
+    lifecycle: LifecycleOwner
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
     var count = 0
     Column(
         modifier = Modifier.fillMaxSize()
@@ -240,18 +280,17 @@ private fun OTPView(
         Button(
             enabled = count == 4 && isPlaying.value,
             onClick = {
-                connectInputtedCode(textList) {
+                connectInputtedCode(textList, email = email, viewModel = viewModel, lifecycle = lifecycle) {
                     focusManager.clearFocus()
                     keyboardController?.hide()
                     if (it) {
-                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show()
                         navController.navigate(Screen.ChangePassword.route) {
                             popUpTo(Screen.ReInputEmail.route) {
                                 inclusive = false
                             }
                         }
                     } else {
-                        Toast.makeText(context, "error, input again", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Failed OTP Code", Toast.LENGTH_SHORT).show()
                         for (text in textList) {
                             text.value = TextFieldValue(
                                 text = "", selection = TextRange(0)
@@ -286,17 +325,39 @@ private fun OTPView(
 }
 
 private fun connectInputtedCode(
-    textList: List<MutableState<TextFieldValue>>, onVerifyCode: ((success: Boolean) -> Unit)? = null
+    textList: List<MutableState<TextFieldValue>>,
+    lifecycle:LifecycleOwner,
+    viewModel: MainViewModel,
+    email: String,
+    onVerifyCode: ((success: Boolean) -> Unit)? = null
+
 ) {
+
     var code = ""
+    var response: SimpleResponse? = null
     for (text in textList) {
         code += text.value.text
     }
     if (code.length == 4) {
-        onVerifyCode?.let {
-            it(
-                true
+        viewModel.otpViewModel.doValidateOtp(
+            ValidatingOtpBody(
+                email = email,
+                otp = code
             )
+        )
+        viewModel.otpViewModel.validateOtpResponse.observe(lifecycle){
+            response = it
+            if (response!!.status == "success"){
+                onVerifyCode?.let {
+                    it(
+                        true
+                    )
+                }
+            }else{
+                onVerifyCode?.let {
+                    it(false)
+                }
+            }
         }
     } else {
         onVerifyCode?.let {

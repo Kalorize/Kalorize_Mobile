@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.body.RequestOtpBody
 import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
@@ -47,6 +48,7 @@ fun ReInputEmailScreen(
     val focusManager = LocalFocusManager.current
     val lifecycle = LocalLifecycleOwner.current
     val context = LocalContext.current
+    val userPreferences = UserPreference(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -144,6 +146,7 @@ fun ReInputEmailScreen(
                         response = it
                         if (response!!.status == "success"){
                             Toast.makeText(context, "The OTP code has been sent, please check your email", Toast.LENGTH_SHORT).show()
+                            userPreferences.bringEmail(email.value)
                             navController.navigate(Screen.Otp.route)
                         }else{
                             Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()

@@ -8,27 +8,56 @@ internal class UserPreference(context: Context) {
 
     private val preference = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun setUser( value: LoginData) {
+    fun setUser(value: LoginData) {
         val editor = preference.edit()
-        editor.putString(TOKEN , value.token)
-        editor.putInt(USER_ID , value.user.id)
-        editor.putString(EMAIL , value.user.email)
-        editor.putString(PASSWORD , value.user.password)
+        editor.putString(TOKEN, value.token)
+        editor.putInt(USER_ID, value.user.id)
+        editor.putString(EMAIL, value.user.email)
+        editor.putString(PASSWORD, value.user.password)
         editor.apply()
+    }
+
+    fun bringEmail(email: String) {
+        val sharedPreferences = preference.edit()
+        sharedPreferences.putString("email-for-change-password", email)
+        sharedPreferences.apply()
+    }
+
+    fun bringChangedPassword(password:String){
+        val sharedPreferences = preference.edit()
+        sharedPreferences.putString("new-password", password)
+        sharedPreferences.apply()
+    }
+
+    fun takeEmail(): String? {
+        return preference.getString("email-for-change-password", "")
+    }
+
+    fun takeChangedPassword():String?{
+        return preference.getString("new-password","")
+    }
+    fun deleteEmailForForgotPassword(){
+        val sharedPreferences = preference.edit()
+        sharedPreferences.remove("email-for-change-password").commit()
+    }
+
+    fun deleteChangedPassword(){
+        val sharedPreferences = preference.edit()
+        sharedPreferences.remove("new-password").commit()
     }
 
     fun getUser(): LoginData {
         return LoginData(
-            token = preference.getString(TOKEN , "")!!,
+            token = preference.getString(TOKEN, "")!!,
             user = LoginUser(
-                id = preference.getInt(USER_ID , -1),
+                id = preference.getInt(USER_ID, -1),
                 email = preference.getString(EMAIL, "")!!,
-                password = preference.getString(PASSWORD , "")!!
+                password = preference.getString(PASSWORD, "")!!
             )
         )
     }
 
-    companion object{
+    companion object {
         private const val PREFS_NAME = "user_pref"
         private const val EMAIL = "email"
         private const val PASSWORD = "password"

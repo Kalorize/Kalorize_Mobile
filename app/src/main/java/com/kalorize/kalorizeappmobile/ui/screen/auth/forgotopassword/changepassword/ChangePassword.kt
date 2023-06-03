@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.changepassword
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -30,12 +32,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.R
+import com.kalorize.kalorizeappmobile.data.local.UserPreference
+import com.kalorize.kalorizeappmobile.data.remote.body.UpdatePassBody
+import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
+import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel
 ) {
     val password = remember {
         mutableStateOf("")
@@ -51,6 +58,10 @@ fun ChangePasswordScreen(
     }
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val userPreferences = UserPreference(context)
+    val email = userPreferences.takeEmail()
+    val lifecycle = LocalLifecycleOwner.current
+    var response: SimpleResponse? = null
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -193,11 +204,27 @@ fun ChangePasswordScreen(
             )
             Button(
                 onClick = {
-                    navController.navigate(route = Screen.GetStartedChangePassword.route) {
-                        // Pop up to login screen
-                        popUpTo(route = Screen.Login.route) {
-                            inclusive = false
+                    viewModel.changePasswordViewModel.doUpdatePassword(
+                        UpdatePassBody(
+                            email = email!!,
+                            newpassword = password.value,
+                            renewpassword = password.value
+                        )
+                    )
+                    viewModel.changePasswordViewModel.updatePasswordResponse.observe(lifecycle){
+                        response = it
+                        if (response!!.status == "success"){
+                            Toast.makeText(context, "Password successfully changed", Toast.LENGTH_SHORT).show()
+                            userPreferences.bringChangedPassword(password.value)
+                            navController.navigate(route = Screen.GetStartedChangePassword.route) {
+                                // Pop up to login screen
+                                popUpTo(route = Screen.Login.route) {
+                                    inclusive = false
 
+                                }
+                            }
+                        }else{
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                         }
                     }
                 },

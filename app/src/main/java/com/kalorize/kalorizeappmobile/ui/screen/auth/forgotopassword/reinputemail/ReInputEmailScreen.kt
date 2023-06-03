@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -28,15 +29,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.kalorize.kalorizeappmobile.data.remote.body.RequestOtpBody
+import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
+import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReInputEmailScreen(navController: NavController) {
+fun ReInputEmailScreen(
+    navController: NavController,
+    viewModel: MainViewModel
+) {
     val email = remember {
-        mutableStateOf("2@gmail.com")
+        mutableStateOf("aman.aim123@gmail.com")
     }
+    var response: SimpleResponse? = null
     val focusManager = LocalFocusManager.current
+    val lifecycle = LocalLifecycleOwner.current
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -130,8 +139,17 @@ fun ReInputEmailScreen(navController: NavController) {
                 } else if (!isEmailValid(email.value)) {
                     Toast.makeText(context, "Wrong Input", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-                    navController.navigate(route = Screen.Otp.route)
+                    viewModel.reInputEmailViewModel.doRequestOtp(RequestOtpBody(email.value))
+                    viewModel.reInputEmailViewModel.otpResponse.observe(lifecycle){
+                        response = it
+                        if (response!!.status == "success"){
+                            Toast.makeText(context, "The OTP code has been sent, please check your email", Toast.LENGTH_SHORT).show()
+                            navController.navigate(Screen.Otp.route)
+                        }else{
+                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
                 }
             },
             modifier = Modifier

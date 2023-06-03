@@ -21,19 +21,19 @@ import com.kalorize.kalorizeappmobile.vm.MainViewModel
 fun SetupNavGraph(
     navController: NavHostController,
     viewModel: MainViewModel
-){
+) {
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
-    ){
-        composable(route = Screen.Splash.route){
+    ) {
+        composable(route = Screen.Splash.route) {
             AnimatedSplashScreen(navHostController = navController)
         }
-        
-        composable(route = Screen.OnBoarding.route){
+
+        composable(route = Screen.OnBoarding.route) {
             OnBoardingScreen(navHostController = navController)
         }
-        
+
         composable(route = Screen.Login.route) {
             LoginScreen(viewModel = viewModel, navHostController = navController)
         }
@@ -48,7 +48,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.ReInputEmail.route
         ) {
-            ReInputEmailScreen(navController = navController)
+            ReInputEmailScreen(navController = navController, viewModel = viewModel)
         }
         composable(
             route = Screen.Otp.route
@@ -62,7 +62,7 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.GetStartedChangePassword.route
-        ){
+        ) {
             GetStartedChangePasswordScreen(navController = navController)
         }
     }

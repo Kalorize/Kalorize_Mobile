@@ -187,8 +187,7 @@ fun OnBoardingPager(
                             },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-
-                                contentColor = Color(0xFFF94917)
+                                containerColor = Color(0xFFF94917)
                             ),
                             contentPadding = PaddingValues(vertical = 12.dp),
                         ) {

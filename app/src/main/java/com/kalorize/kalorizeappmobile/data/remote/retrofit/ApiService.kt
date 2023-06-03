@@ -27,21 +27,21 @@ interface ApiService {
     ): Result<RegisterResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("v1/auth/forgot-password")
+    @POST("v1/auth/forgot-password")
     suspend fun requestOtp(
         @Body email: String
-    ) : SimpleResponse
+    ) : Result<SimpleResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("v1/auth/forgot-password")
+    @POST("v1/auth/forgot-password")
     suspend fun validateOtp(
-        @Body email: ValidatingOtpBody
-    ) : SimpleResponse
+        @Body body: ValidatingOtpBody
+    ) : Result<SimpleResponse>
 
     @Headers("Content-Type: application/json")
-    @GET("v1/auth/forgot-password")
+    @POST("v1/auth/forgot-password")
     suspend fun updatePass(
-        @Body email: UpdatePassBody
-    ) : SimpleResponse
+        @Body body: UpdatePassBody
+    ) : Result<SimpleResponse>
 
 }

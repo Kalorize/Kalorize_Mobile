@@ -1,6 +1,7 @@
 package com.kalorize.kalorizeappmobile.ui.screen.auth.login
 
 import android.graphics.drawable.Icon
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
 import com.kalorize.kalorizeappmobile.R
 import com.kalorize.kalorizeappmobile.data.local.UserPreference
@@ -163,21 +165,24 @@ fun LoginScreen(
                 .padding(vertical = 8.dp)
                 .align(Alignment.End)
         )
+
         Button(
             onClick = {
+
             viewModel.loginViewModel.doLogin(LoginBody(email.value,password.value))
             viewModel.loginViewModel.login.observe(lifecycle){
                 response = it
+                Log.d("Check response" , response.toString())
                 if (response != null){
                     if (response!!.data.token.isEmpty()){
                         Toast.makeText(context, "Login Gagal pastikan Email dan Password benar", Toast.LENGTH_SHORT).show()
                     }else{
                         Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
                         userPreferences.setUser(response!!.data)
+                        viewModel.loginViewModel.cleanLogin()
                         navHostController.popBackStack()
                         navHostController.navigate(Screen.Home.route)
                     }
-
                 }
 
             } },

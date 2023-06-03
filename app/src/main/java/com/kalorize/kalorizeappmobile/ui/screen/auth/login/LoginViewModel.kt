@@ -38,4 +38,19 @@ class LoginViewModel(private val apiRepository: ApiRepository): ViewModel() {
                 }
         }
     }
+
+    fun cleanLogin(){
+        _login.postValue(
+            LoginResponse(
+                status = "",
+                data = LoginData(
+                    token = "",
+                    user = LoginUser(
+                        id = -1,
+                        email = "",
+                        password = ""
+                    )
+                )
+        ))
+    }
 }

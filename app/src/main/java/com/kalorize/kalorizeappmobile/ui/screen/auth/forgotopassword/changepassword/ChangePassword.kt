@@ -32,6 +32,7 @@ import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.R
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordScreen(
     navController: NavController
@@ -59,7 +60,7 @@ fun ChangePasswordScreen(
             modifier = Modifier.clickable {
                 navController.popBackStack(
                     route = Screen.ChangePassword.route,
-                    inclusive = false
+                    inclusive = true
                 )
             }
         ) {
@@ -127,9 +128,9 @@ fun ChangePasswordScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 maxLines = 1,
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -172,9 +173,9 @@ fun ChangePasswordScreen(
                 modifier = Modifier
                     .fillMaxWidth(),
                 maxLines = 1,
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 visualTransformation = if (confirmPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
@@ -195,7 +196,7 @@ fun ChangePasswordScreen(
                     navController.navigate(route = Screen.GetStartedChangePassword.route) {
                         // Pop up to login screen
                         popUpTo(route = Screen.Login.route) {
-                            inclusive = true
+                            inclusive = false
 
                         }
                     }

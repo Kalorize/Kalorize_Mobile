@@ -71,38 +71,38 @@ fun OtpScreen(
         remember {
             mutableStateOf(
                 TextFieldValue(
-                    text = "9", TextRange(index = 0)
+                    text = "", TextRange(index = 0)
                 )
             )
         },
         remember {
             mutableStateOf(
                 TextFieldValue(
-                    text = "9", TextRange(index = 0)
+                    text = "", TextRange(index = 0)
                 )
             )
         },
         remember {
             mutableStateOf(
                 TextFieldValue(
-                    text = "9", TextRange(index = 0)
+                    text = "", TextRange(index = 0)
                 )
             )
         },
         remember {
             mutableStateOf(
                 TextFieldValue(
-                    text = "9", TextRange(index = 0)
+                    text = "", TextRange(index = 0)
                 )
             )
         },
     )
 
     val requesterList = listOf(
-        FocusRequester(),
-        FocusRequester(),
-        FocusRequester(),
-        FocusRequester(),
+        remember { FocusRequester() },
+        remember { FocusRequester() },
+        remember { FocusRequester() },
+        remember { FocusRequester() },
     )
     Column(
         modifier = Modifier
@@ -188,7 +188,8 @@ fun OtpScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OTPView(
-    textList: List<MutableState<TextFieldValue>>, requesterList: List<FocusRequester>,
+    textList: List<MutableState<TextFieldValue>>,
+    requesterList: List<FocusRequester>,
     isPlaying: MutableState<Boolean>,
     navController: NavHostController
 ) {

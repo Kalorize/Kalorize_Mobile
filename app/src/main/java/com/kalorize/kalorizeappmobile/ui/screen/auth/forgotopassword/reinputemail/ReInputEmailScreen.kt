@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReInputEmailScreen(navController: NavController) {
     val email = remember {
@@ -116,9 +117,9 @@ fun ReInputEmailScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth(),
             maxLines = 1,
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
             ),
 
             )

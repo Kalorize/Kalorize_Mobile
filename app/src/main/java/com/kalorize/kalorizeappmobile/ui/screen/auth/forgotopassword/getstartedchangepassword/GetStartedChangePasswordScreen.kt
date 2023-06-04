@@ -77,7 +77,7 @@ fun GetStartedChangePasswordScreen(
                         response = it
                         if (response!!.status == "success"){
                             Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
-                            userPreferences.setUser(response!!.data)
+                            userPreferences.setUser(response!!.data!!)
                             userPreferences.deleteEmailForForgotPassword()
                             userPreferences.deleteChangedPassword()
                             viewModel.loginViewModel.cleanLogin()

@@ -42,7 +42,7 @@ fun ReInputEmailScreen(
     viewModel: MainViewModel
 ) {
     val email = remember {
-        mutableStateOf("aman.aim123@gmail.com")
+        mutableStateOf("")
     }
     var response: SimpleResponse? = null
     val focusManager = LocalFocusManager.current

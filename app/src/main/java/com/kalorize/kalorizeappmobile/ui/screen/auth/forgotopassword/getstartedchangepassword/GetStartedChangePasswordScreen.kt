@@ -81,8 +81,11 @@ fun GetStartedChangePasswordScreen(
                             userPreferences.deleteEmailForForgotPassword()
                             userPreferences.deleteChangedPassword()
                             viewModel.loginViewModel.cleanLogin()
-                            navController.popBackStack()
-                            navController.navigate(Screen.Home.route)
+                            navController.navigate(Screen.Home.route){
+                                popUpTo(Screen.Login.route){
+                                    inclusive = true
+                                }
+                            }
                         }else{
                             Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
                         }

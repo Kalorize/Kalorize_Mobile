@@ -204,27 +204,37 @@ fun ChangePasswordScreen(
             )
             Button(
                 onClick = {
-                    viewModel.changePasswordViewModel.doUpdatePassword(
-                        UpdatePassBody(
-                            email = email!!,
-                            newpassword = password.value,
-                            renewpassword = password.value
+                    if (password.value == "" || confirmPassword.value == "") {
+                        Toast.makeText(context, "Input is empty", Toast.LENGTH_SHORT).show()
+                    } else if (password.value != confirmPassword.value) {
+                        Toast.makeText(context, "Input is not the same", Toast.LENGTH_SHORT)
+                            .show()
+                    } else {
+                        viewModel.changePasswordViewModel.doUpdatePassword(
+                            UpdatePassBody(
+                                email = email!!,
+                                newpassword = password.value,
+                                renewpassword = password.value
+                            )
                         )
-                    )
-                    viewModel.changePasswordViewModel.updatePasswordResponse.observe(lifecycle){
-                        response = it
-                        if (response!!.status == "success"){
-                            Toast.makeText(context, "Password successfully changed", Toast.LENGTH_SHORT).show()
-                            userPreferences.bringChangedPassword(password.value)
-                            navController.navigate(route = Screen.GetStartedChangePassword.route) {
-                                // Pop up to login screen
-                                popUpTo(route = Screen.Login.route) {
-                                    inclusive = false
-
+                        viewModel.changePasswordViewModel.updatePasswordResponse.observe(lifecycle) {
+                            response = it
+                            if (response!!.status == "success") {
+                                Toast.makeText(
+                                    context,
+                                    "Password successfully changed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                userPreferences.bringChangedPassword(password.value)
+                                navController.navigate(route = Screen.GetStartedChangePassword.route) {
+                                    // Pop up to login screen
+                                    popUpTo(route = Screen.Login.route) {
+                                        inclusive = false
+                                    }
                                 }
+                            } else {
+                                Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                             }
-                        }else{
-                            Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
                         }
                     }
                 },

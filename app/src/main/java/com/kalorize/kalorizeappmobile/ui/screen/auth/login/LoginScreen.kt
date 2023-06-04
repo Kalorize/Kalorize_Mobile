@@ -176,19 +176,20 @@ fun LoginScreen(
                 viewModel.loginViewModel.login.observe(lifecycle) {
                     response = it
                     Log.d("Check response", response.toString())
-                    if (response != null) {
-                        if (response!!.data.token.isEmpty()) {
-                            Toast.makeText(
-                                context,
-                                "Login Gagal pastikan Email dan Password benar",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
-                            userPreferences.setUser(response!!.data)
-                            viewModel.loginViewModel.cleanLogin()
-                            navHostController.popBackStack()
-                            navHostController.navigate(Screen.Home.route)
+                    if (response!!.data.token.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Login Gagal pastikan Email dan Password benar",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
+                        userPreferences.setUser(response!!.data)
+                        viewModel.loginViewModel.cleanLogin()
+                        navHostController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) {
+                                inclusive = true
+                            }
                         }
                     }
 

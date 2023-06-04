@@ -1,8 +1,10 @@
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -35,16 +37,20 @@ fun RegisterScreen(
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current
     val fullNameState = remember {
-        mutableStateOf("") }
+        mutableStateOf("")
+    }
     val emailState = remember {
-        mutableStateOf("") }
+        mutableStateOf("")
+    }
     val passwordState = remember {
-        mutableStateOf("") }
+        mutableStateOf("")
+    }
     val passwordVisibility = remember {
         mutableStateOf(false)
     }
     val confirmPasswordState = remember {
-        mutableStateOf("") }
+        mutableStateOf("")
+    }
 
     val confirmedPasswordVisibility = remember {
         mutableStateOf(false)
@@ -57,17 +63,18 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(id = R.drawable.markorange),
             contentDescription = "Logo",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(bottom = 30.dp , top = 30.dp)
+            modifier = Modifier.padding(bottom = 30.dp, top = 30.dp)
         )
         Text(
-            text = "Hi Friend",
+            text = "Hi Friend👋",
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 4.dp)
@@ -82,7 +89,7 @@ fun RegisterScreen(
         )
         Text(
             text = "Full Name",
-            style = TextStyle(fontSize = 16.sp , fontWeight = FontWeight.Bold),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 10.dp)
                 .align(Alignment.Start)
@@ -104,7 +111,7 @@ fun RegisterScreen(
 
         Text(
             text = "Email",
-            style = TextStyle(fontSize = 16.sp  , fontWeight = FontWeight.Bold),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 10.dp)
                 .align(Alignment.Start)
@@ -126,7 +133,7 @@ fun RegisterScreen(
 
         Text(
             text = "Password",
-            style = TextStyle(fontSize = 16.sp , fontWeight = FontWeight.Bold),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 10.dp)
                 .align(Alignment.Start)
@@ -145,9 +152,9 @@ fun RegisterScreen(
                 unfocusedIndicatorColor = Color.Transparent
             ),
             trailingIcon = {
-                val image = if (passwordVisibility.value){
+                val image = if (passwordVisibility.value) {
                     painterResource(id = R.drawable.showpassword)
-                }else {
+                } else {
                     painterResource(id = R.drawable.hidepassword)
                 }
                 IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
@@ -158,7 +165,7 @@ fun RegisterScreen(
 
         Text(
             text = "Confirm Password",
-            style = TextStyle(fontSize = 16.sp , fontWeight = FontWeight.Bold),
+            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 20.dp)
                 .align(Alignment.Start)
@@ -168,7 +175,8 @@ fun RegisterScreen(
             value = confirmPasswordState.value,
             onValueChange = { input ->
                 confirmPasswordState.value = input
-                isSamePassword.value = passwordState.value == confirmPasswordState.value },
+                isSamePassword.value = passwordState.value == confirmPasswordState.value
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp),
@@ -179,12 +187,14 @@ fun RegisterScreen(
                 unfocusedIndicatorColor = Color.Transparent
             ),
             trailingIcon = {
-                val image = if (confirmedPasswordVisibility.value){
+                val image = if (confirmedPasswordVisibility.value) {
                     painterResource(id = R.drawable.showpassword)
-                }else {
+                } else {
                     painterResource(id = R.drawable.hidepassword)
                 }
-                IconButton(onClick = { confirmedPasswordVisibility.value = !confirmedPasswordVisibility.value }) {
+                IconButton(onClick = {
+                    confirmedPasswordVisibility.value = !confirmedPasswordVisibility.value
+                }) {
                     Icon(painter = image, contentDescription = "password Toggle")
                 }
             }
@@ -192,14 +202,20 @@ fun RegisterScreen(
         Button(
             enabled = isSamePassword.value,
             onClick = {
-                viewModel.registerViewModel.doRegister(RegisterBody(emailState.value, passwordState.value, confirmPasswordState.value))
-                viewModel.registerViewModel.register.observe(lifecycle){
+                viewModel.registerViewModel.doRegister(
+                    RegisterBody(
+                        emailState.value,
+                        passwordState.value,
+                        confirmPasswordState.value
+                    )
+                )
+                viewModel.registerViewModel.register.observe(lifecycle) {
                     response = it
-                    if (response != null){
-                        if (response!!.registerData.registerUser.id == -1){
-                            Toast.makeText(context , it.status , Toast.LENGTH_SHORT).show()
-                        }else {
-                            Toast.makeText(context, it.status , Toast.LENGTH_SHORT).show()
+                    if (response != null) {
+                        if (response!!.registerData.registerUser.id == -1) {
+                            Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
                             navHostController.navigate(Screen.Login.route)
                         }
                     }
@@ -229,7 +245,9 @@ fun RegisterScreen(
                 style = TextStyle(fontSize = 16.sp)
             )
             TextButton(
-                onClick = { /* Handle register here click */ },
+                onClick = {
+                    navHostController.popBackStack()
+                },
                 content = {
                     Text(
                         text = "Login",

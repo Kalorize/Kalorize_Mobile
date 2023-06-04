@@ -1,22 +1,19 @@
 package com.kalorize.kalorizeappmobile.ui.screen.auth.login
 
-import android.graphics.drawable.Icon
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
+
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -44,7 +41,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: MainViewModel,
     navHostController: NavHostController
-){
+) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current
     var response: LoginResponse? = null
@@ -68,10 +65,10 @@ fun LoginScreen(
             painter = painterResource(id = R.drawable.markorange),
             contentDescription = "Logo",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(bottom = 50.dp , top = 50.dp)
+            modifier = Modifier.padding(bottom = 50.dp, top = 50.dp)
         )
         Text(
-            text = "Welcome Back",
+            text = "Welcome Back 👋",
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
                 .padding(bottom = 8.dp)
@@ -144,61 +141,81 @@ fun LoginScreen(
             ),
             visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                val image = if (passwordVisibility.value){
+                val image = if (passwordVisibility.value) {
                     painterResource(id = R.drawable.showpassword)
-                }else {
+                } else {
                     painterResource(id = R.drawable.hidepassword)
                 }
                 IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
                     Icon(painter = image, contentDescription = "password Toggle")
                 }
             }
-
-
         )
-
         Text(
             text = "Forgot password",
             style = TextStyle(fontSize = 16.sp),
-            color = Color.Blue,
+            color = Color(249, 73, 23),
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .align(Alignment.End)
+                .clickable {
+                    navHostController.navigate(route = Screen.ReInputEmail.route)
+                }
         )
-
         Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+                .height(height = 40.dp),
+            shape = RoundedCornerShape(50),
+            colors = ButtonDefaults.buttonColors(
+                Color(0xFFF94917)
+            ),
             onClick = {
-
-            viewModel.loginViewModel.doLogin(LoginBody(email.value,password.value))
-            viewModel.loginViewModel.login.observe(lifecycle){
-                response = it
-                Log.d("Check response" , response.toString())
-                if (response != null){
-                    if (response!!.data.token.isEmpty()){
-                        Toast.makeText(context, "Login Gagal pastikan Email dan Password benar", Toast.LENGTH_SHORT).show()
-                    }else{
+                viewModel.loginViewModel.doLogin(LoginBody(email.value, password.value))
+                viewModel.loginViewModel.login.observe(lifecycle) {
+                    response = it
+                    Log.d("Check response", response.toString())
+                    if (response!!.data.token.isEmpty()) {
+                        Toast.makeText(
+                            context,
+                            "Login Gagal pastikan Email dan Password benar",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
                         Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
                         userPreferences.setUser(response!!.data)
                         viewModel.loginViewModel.cleanLogin()
-                        navHostController.popBackStack()
-                        navHostController.navigate(Screen.Home.route)
+                        navHostController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Login.route) {
+                                inclusive = true
+                            }
+                        }
                     }
-                }
 
-            } },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)) {
+                }
+            },
+        ) {
             Text(text = "Login")
         }
-        TextButton(
-            onClick = {
-                      navHostController.navigate(Screen.Register.route)
-            },
-            modifier = Modifier.padding(top = 8.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = "Register here")
+            Text(
+                text = "Don’t have an account?",
+                color = Color.Gray
+            )
+            Text(
+                modifier = Modifier
+                    .clickable {
+                        navHostController.navigate(Screen.Register.route)
+                    },
+                text = " Register here",
+                color = Color(249, 73, 23)
+            )
+
         }
+
 
     }
 }

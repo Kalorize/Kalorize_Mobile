@@ -1,9 +1,6 @@
 package com.kalorize.kalorizeappmobile.data.remote
 
-import com.kalorize.kalorizeappmobile.data.remote.body.LoginBody
-import com.kalorize.kalorizeappmobile.data.remote.body.RegisterBody
-import com.kalorize.kalorizeappmobile.data.remote.body.UpdatePassBody
-import com.kalorize.kalorizeappmobile.data.remote.body.ValidatingOtpBody
+import com.kalorize.kalorizeappmobile.data.remote.body.*
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.RegisterResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
@@ -19,8 +16,8 @@ class ApiRepository(private val apiService: ApiService) {
         return apiService.register(body)
     }
 
-    suspend fun reqOtp(email: String): Result<SimpleResponse> {
-        return  apiService.requestOtp(email)
+    suspend fun reqOtp(body: RequestOtpBody): Result<SimpleResponse> {
+        return  apiService.requestOtp(body)
     }
 
     suspend fun validateOtp(body: ValidatingOtpBody): Result<SimpleResponse>{

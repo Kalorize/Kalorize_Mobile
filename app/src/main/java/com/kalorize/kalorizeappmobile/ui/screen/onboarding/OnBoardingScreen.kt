@@ -174,7 +174,6 @@ fun OnBoardingPager(
                                 fontWeight = FontWeight.SemiBold
                             )
                         }
-
                         NextPageButton(
                             pagerState = pagerState,
                             item = item[pagerState.currentPage]
@@ -187,8 +186,7 @@ fun OnBoardingPager(
                             },
                             modifier = Modifier.fillMaxWidth(),
                             colors = ButtonDefaults.buttonColors(
-
-                                contentColor = Color(0xFFF94917)
+                                containerColor = Color(0xFFF94917)
                             ),
                             contentPadding = PaddingValues(vertical = 12.dp),
                         ) {
@@ -221,7 +219,6 @@ fun PagerIndicator(currentPage: Int, items: List<OnBoardingData>) {
 @Composable
 fun Indicator(isSelected: Boolean, color: Color) {
     val width = animateDpAsState(targetValue = if (isSelected) 40.dp else 10.dp)
-
     Box(
         modifier = Modifier
             .padding(4.dp)

@@ -35,7 +35,6 @@ fun AnimatedSplashScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val userPreferences = UserPreference(context)
     val user = userPreferences.getUser()
-    Log.d("Check User : " , user.toString())
     LaunchedEffect(key1 = true){
         startAnimation = true
         delay(4000)

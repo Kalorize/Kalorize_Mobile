@@ -91,7 +91,7 @@ fun OnBoardingPager(
     item: List<OnBoardingData>,
     pagerState: PagerState,
     modifier: Modifier = Modifier
-){
+) {
     Box(modifier = modifier) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -120,83 +120,81 @@ fun OnBoardingPager(
             }
         }
 
-        Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(340.dp),
-                shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .align(Alignment.BottomCenter),
+            shape = RoundedCornerShape(topStart = 50.dp, topEnd = 50.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(50.dp, 0.dp, 50.dp, 28.dp),
+                horizontalAlignment = Alignment.CenterHorizontally // Align content horizontally in the center
             ) {
-                Box {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally // Align content horizontally in the center
-                    ) {
-                        PagerIndicator(items = item, currentPage = pagerState.currentPage)
-                        Text(
-                            text = item[pagerState.currentPage].title,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 20.dp, end = 30.dp),
-                            color = item[pagerState.currentPage].mainColor,
-                            textAlign = TextAlign.Center, // Align text in the center
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.ExtraBold
-                        )
+                PagerIndicator(items = item, currentPage = pagerState.currentPage)
+                Text(
+                    text = item[pagerState.currentPage].title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp),
+                    color = item[pagerState.currentPage].mainColor,
+                    textAlign = TextAlign.Center, // Align text in the center
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
 
-                        Text(
-                            text = item[pagerState.currentPage].desc,
-                            modifier = Modifier.padding(top = 8.dp, end = 8.dp),
-                            color = Color.Black,
-                            fontSize = 17.sp,
-                            textAlign = TextAlign.Center, // Align text in the center
-                            fontWeight = FontWeight.ExtraLight
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(30.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            if (pagerState.currentPage != 2) {
-                                TextButton(onClick = {
-                                    //skip
-                                }) {
-                                    Text(
-                                        text = "Skip Now",
-                                        color = Color(0xFF292D32),
-                                        textAlign = TextAlign.Right,
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
+                Text(
+                    text = item[pagerState.currentPage].desc,
+                    modifier = Modifier.padding(top = 8.dp),
+                    color = Color.Black,
+                    fontSize = 17.sp,
+                    textAlign = TextAlign.Center, // Align text in the center
+                    fontWeight = FontWeight.ExtraLight
+                )
 
-                                NextPageButton(
-                                    pagerState = pagerState,
-                                    item = item[pagerState.currentPage]
-                                )
-                            } else {
-                                Button(
-                                    onClick = {
-                                        navHostController.navigate(Screen.Login.route)
-                                    },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    colors = ButtonDefaults.buttonColors(
-                                        contentColor = item[pagerState.currentPage].mainColor
-                                    ),
-                                    contentPadding = PaddingValues(vertical = 12.dp),
-                                ) {
-                                    Text(
-                                        text = "Get Started",
-                                        color = Color.White,
-                                        fontSize = 16.sp
-                                    )
-                                }
+                Spacer(modifier = Modifier.weight(1f))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (pagerState.currentPage != 2) {
+                        TextButton(
+                            onClick = {
+                                navHostController.popBackStack()
+                                navHostController.navigate(Screen.Login.route)
                             }
+                        ) {
+                            Text(
+                                text = "Skip Now",
+                                color = Color(0xFF292D32),
+                                textAlign = TextAlign.Right,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                        NextPageButton(
+                            pagerState = pagerState,
+                            item = item[pagerState.currentPage]
+                        )
+                    } else {
+                        Button(
+                            onClick = {
+                                navHostController.popBackStack()
+                                navHostController.navigate(Screen.Login.route)
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFF94917)
+                            ),
+                            contentPadding = PaddingValues(vertical = 12.dp),
+                        ) {
+                            Text(
+                                text = "Get Started",
+                                color = Color.White,
+                                fontSize = 16.sp
+                            )
                         }
                     }
                 }
@@ -204,6 +202,7 @@ fun OnBoardingPager(
         }
     }
 }
+
 
 @Composable
 fun PagerIndicator(currentPage: Int, items: List<OnBoardingData>) {
@@ -220,7 +219,6 @@ fun PagerIndicator(currentPage: Int, items: List<OnBoardingData>) {
 @Composable
 fun Indicator(isSelected: Boolean, color: Color) {
     val width = animateDpAsState(targetValue = if (isSelected) 40.dp else 10.dp)
-
     Box(
         modifier = Modifier
             .padding(4.dp)

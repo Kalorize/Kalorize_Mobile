@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -30,6 +31,7 @@ import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.body.LoginBody
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
+import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

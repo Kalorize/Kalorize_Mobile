@@ -30,7 +30,8 @@ class LoginViewModel(private val apiRepository: ApiRepository): ViewModel() {
                             user = LoginUser(
                                 id = -1,
                                 email = "",
-                                password = ""
+                                password = "",
+                                name = ""
                             )
                         )
                     )
@@ -48,7 +49,8 @@ class LoginViewModel(private val apiRepository: ApiRepository): ViewModel() {
                     user = LoginUser(
                         id = -1,
                         email = "",
-                        password = ""
+                        password = "",
+                        name = ""
                     )
                 )
         ))

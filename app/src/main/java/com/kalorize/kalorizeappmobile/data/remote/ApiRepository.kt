@@ -1,9 +1,7 @@
 package com.kalorize.kalorizeappmobile.data.remote
 
 import com.kalorize.kalorizeappmobile.data.remote.body.*
-import com.kalorize.kalorizeappmobile.data.remote.response.LoginResponse
-import com.kalorize.kalorizeappmobile.data.remote.response.RegisterResponse
-import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
+import com.kalorize.kalorizeappmobile.data.remote.response.*
 import com.kalorize.kalorizeappmobile.data.remote.retrofit.ApiService
 
 class ApiRepository(private val apiService: ApiService) {
@@ -26,5 +24,17 @@ class ApiRepository(private val apiService: ApiService) {
 
     suspend fun rePassword(body: UpdatePassBody): Result<SimpleResponse>{
         return apiService.updatePass(body)
+    }
+
+    suspend fun getRecommendation(token: String): Result<RecommendationResponse>{
+        return apiService.getRecommendation("Bearer $token")
+    }
+
+    suspend fun getRecommendationHistory(token: String, date: String): Result<RecommendationHistoryResponse> {
+        return apiService.getRecommendationHistory("Bearer $token" , date)
+    }
+
+    suspend fun chooseFood(token: String, body: ChooseFoodBody): Result<ChooseFoodResponse>{
+        return apiService.chooseFood("Bearer $token" ,body)
     }
 }

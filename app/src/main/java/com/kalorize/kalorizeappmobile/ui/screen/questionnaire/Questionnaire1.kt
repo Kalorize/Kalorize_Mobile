@@ -152,8 +152,7 @@ fun Questionnaire1() {
             onClick = {
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.White, // Ubah warna teks di sini
@@ -172,8 +171,7 @@ fun Questionnaire1() {
             onClick = {
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .fillMaxWidth(),
             shape = RoundedCornerShape(50),
 //            colors = ButtonDefaults.buttonColors(
 //                contentColor = Color.White, // Ubah warna teks di sini

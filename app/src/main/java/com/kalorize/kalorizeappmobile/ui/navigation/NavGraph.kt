@@ -1,6 +1,8 @@
 package com.kalorize.kalorizeappmobile.ui.navigation
 
 import RegisterScreen
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -16,6 +18,7 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SetupNavGraph(
@@ -39,7 +42,7 @@ fun SetupNavGraph(
         }
 
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController , viewModel)
         }
 
         composable(route = Screen.Register.route) {

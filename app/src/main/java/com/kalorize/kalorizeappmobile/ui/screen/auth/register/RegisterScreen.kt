@@ -60,203 +60,222 @@ fun RegisterScreen(
     }
     var response: RegisterResponse? = null
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.markorange),
-            contentDescription = "Logo",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.padding(bottom = 30.dp, top = 30.dp)
-        )
-        Text(
-            text = "Hi Friend👋",
-            style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+    val loading = remember {
+        mutableStateOf(false)
+    }
+    Box(){
+        Column(
             modifier = Modifier
-                .padding(bottom = 4.dp)
-                .align(Alignment.Start)
-        )
-        Text(
-            text = "Register here",
-            style = TextStyle(fontSize = 16.sp),
-            modifier = Modifier
-                .padding(bottom = 20.dp)
-                .align(Alignment.Start)
-        )
-        Text(
-            text = "Full Name",
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .align(Alignment.Start)
-        )
-
-        TextField(
-            value = fullNameState.value,
-            onValueChange = { fullNameState.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
-            shape = RoundedCornerShape(20.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+                .fillMaxSize()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.markorange),
+                contentDescription = "Logo",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.padding(bottom = 30.dp, top = 30.dp)
             )
-        )
-
-        Text(
-            text = "Email",
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .align(Alignment.Start)
-        )
-
-        TextField(
-            value = emailState.value,
-            onValueChange = { emailState.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-            shape = RoundedCornerShape(20.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+            Text(
+                text = "Hi Friend👋",
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .align(Alignment.Start)
             )
-        )
+            Text(
+                text = "Register here",
+                style = TextStyle(fontSize = 16.sp),
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.Start)
+            )
+            Text(
+                text = "Full Name",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .align(Alignment.Start)
+            )
 
-        Text(
-            text = "Password",
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-                .align(Alignment.Start)
-        )
-
-        TextField(
-            value = passwordState.value,
-            onValueChange = { passwordState.value = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
-            shape = RoundedCornerShape(20.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            trailingIcon = {
-                val image = if (passwordVisibility.value) {
-                    painterResource(id = R.drawable.showpassword)
-                } else {
-                    painterResource(id = R.drawable.hidepassword)
-                }
-                IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
-                    Icon(painter = image, contentDescription = "password Toggle")
-                }
-            }
-        )
-
-        Text(
-            text = "Confirm Password",
-            style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-            modifier = Modifier
-                .padding(bottom = 20.dp)
-                .align(Alignment.Start)
-        )
-
-        TextField(
-            value = confirmPasswordState.value,
-            onValueChange = { input ->
-                confirmPasswordState.value = input
-                isSamePassword.value = passwordState.value == confirmPasswordState.value
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            visualTransformation = if (confirmedPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
-            shape = RoundedCornerShape(20.dp),
-            colors = TextFieldDefaults.textFieldColors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
-            ),
-            trailingIcon = {
-                val image = if (confirmedPasswordVisibility.value) {
-                    painterResource(id = R.drawable.showpassword)
-                } else {
-                    painterResource(id = R.drawable.hidepassword)
-                }
-                IconButton(onClick = {
-                    confirmedPasswordVisibility.value = !confirmedPasswordVisibility.value
-                }) {
-                    Icon(painter = image, contentDescription = "password Toggle")
-                }
-            }
-        )
-        Button(
-            enabled = isSamePassword.value,
-            onClick = {
-                viewModel.registerViewModel.doRegister(
-                    RegisterBody(
-                        emailState.value,
-                        passwordState.value,
-                        confirmPasswordState.value
-                    )
+            TextField(
+                value = fullNameState.value,
+                onValueChange = { fullNameState.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                shape = RoundedCornerShape(20.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 )
-                viewModel.registerViewModel.register.observe(lifecycle) {
-                    response = it
-                    if (response != null) {
-                        if (response!!.registerData.registerUser.id == -1) {
-                            Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
-                            navHostController.navigate(Screen.Login.route)
-                        }
+            )
+
+            Text(
+                text = "Email",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .align(Alignment.Start)
+            )
+
+            TextField(
+                value = emailState.value,
+                onValueChange = { emailState.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                shape = RoundedCornerShape(20.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
+            )
+
+            Text(
+                text = "Password",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+                    .align(Alignment.Start)
+            )
+
+            TextField(
+                value = passwordState.value,
+                onValueChange = { passwordState.value = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+                shape = RoundedCornerShape(20.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                trailingIcon = {
+                    val image = if (passwordVisibility.value) {
+                        painterResource(id = R.drawable.showpassword)
+                    } else {
+                        painterResource(id = R.drawable.hidepassword)
+                    }
+                    IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                        Icon(painter = image, contentDescription = "password Toggle")
                     }
                 }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp, horizontal = 8.dp),
-            shape = RoundedCornerShape(50),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White, // Ubah warna teks di sini
-            ),
-            content = {
-                Text(
-                    text = "Register",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Row(
-            modifier = Modifier.padding(top = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Have an account?",
-                style = TextStyle(fontSize = 16.sp)
             )
-            TextButton(
-                onClick = {
-                    navHostController.popBackStack()
+
+            Text(
+                text = "Confirm Password",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight.Bold),
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .align(Alignment.Start)
+            )
+
+            TextField(
+                value = confirmPasswordState.value,
+                onValueChange = { input ->
+                    confirmPasswordState.value = input
+                    isSamePassword.value = passwordState.value == confirmPasswordState.value
                 },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                visualTransformation = if (confirmedPasswordVisibility.value) VisualTransformation.None else PasswordVisualTransformation(),
+                shape = RoundedCornerShape(20.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+                trailingIcon = {
+                    val image = if (confirmedPasswordVisibility.value) {
+                        painterResource(id = R.drawable.showpassword)
+                    } else {
+                        painterResource(id = R.drawable.hidepassword)
+                    }
+                    IconButton(onClick = {
+                        confirmedPasswordVisibility.value = !confirmedPasswordVisibility.value
+                    }) {
+                        Icon(painter = image, contentDescription = "password Toggle")
+                    }
+                }
+            )
+            Button(
+                enabled = isSamePassword.value,
+                onClick = {
+                    loading.value = true
+                    viewModel.registerViewModel.doRegister(
+                        RegisterBody(
+                            emailState.value,
+                            fullNameState.value,
+                            passwordState.value,
+                            confirmPasswordState.value
+                        )
+                    )
+                    viewModel.registerViewModel.register.observe(lifecycle) {
+                        response = it
+                        if (response != null) {
+                            if (response!!.registerData.registerUser.id == -1) {
+                                Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
+                            } else {
+                                Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()
+                                navHostController.navigate(Screen.Login.route)
+                            }
+                        }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 8.dp),
+                shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = Color.White, // Ubah warna teks di sini
+                ),
                 content = {
                     Text(
-                        text = "Login",
-                        color = Color(0xFFF94917),
+                        text = "Register",
                         style = TextStyle(fontSize = 16.sp)
                     )
                 }
             )
+            Row(
+                modifier = Modifier.padding(top = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Have an account?",
+                    style = TextStyle(fontSize = 16.sp)
+                )
+                TextButton(
+                    onClick = {
+                        navHostController.popBackStack()
+                    },
+                    content = {
+                        Text(
+                            text = "Login",
+                            color = Color(0xFFF94917),
+                            style = TextStyle(fontSize = 16.sp)
+                        )
+                    }
+                )
+            }
+        }
+
+        if (loading.value){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(80.dp),
+                color = Color(0xFFF94917),
+                strokeWidth = 6.dp
+            )
         }
     }
+
+
 }
 

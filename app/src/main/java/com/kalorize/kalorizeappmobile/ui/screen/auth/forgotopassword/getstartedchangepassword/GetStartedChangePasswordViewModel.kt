@@ -29,7 +29,8 @@ class GetStartedChangePasswordViewModel(private val apiRepository: ApiRepository
                                 user = LoginUser(
                                     id = -1,
                                     email = "",
-                                    password = ""
+                                    password = "",
+                                    name = ""
                                 )
                             )
                         )
@@ -47,7 +48,8 @@ class GetStartedChangePasswordViewModel(private val apiRepository: ApiRepository
                     user = LoginUser(
                         id = -1,
                         email = "",
-                        password = ""
+                        password = "",
+                        name = ""
                     )
                 )
             ))

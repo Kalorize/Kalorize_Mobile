@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Questionnaire2() {
+fun Questionnaire3() {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -33,7 +33,7 @@ fun Questionnaire2() {
         )
         Spacer(modifier = Modifier.height(28.dp))
         Text(
-            text = "Choose your preference (in a week)",
+            text = "Choose your main target",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -51,7 +51,7 @@ fun Questionnaire2() {
             shape = RoundedCornerShape(50),
             content = {
                 Text(
-                    text = "Extreme (36 hours gym)",
+                    text = "Reduce Weight",
                     style = TextStyle(fontSize = 16.sp)
                 )
             }
@@ -65,7 +65,7 @@ fun Questionnaire2() {
             shape = RoundedCornerShape(50),
             content = {
                 Text(
-                    text = "Hard (24 hours gym)",
+                    text = "Increase Muscle",
                     style = TextStyle(fontSize = 16.sp)
                 )
             }
@@ -79,21 +79,7 @@ fun Questionnaire2() {
             shape = RoundedCornerShape(50),
             content = {
                 Text(
-                    text = "Medium (12 hours gym)",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedButton(
-            onClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
-            content = {
-                Text(
-                    text = "Easy (6 hours gym)",
+                    text = "Be Healthy",
                     style = TextStyle(fontSize = 16.sp)
                 )
             }
@@ -120,6 +106,6 @@ fun Questionnaire2() {
 
 @Preview(showBackground = true)
 @Composable
-fun Questionnaire2Preview() {
-    Questionnaire2()
+fun Questionnaire3Preview() {
+    Questionnaire3()
 }

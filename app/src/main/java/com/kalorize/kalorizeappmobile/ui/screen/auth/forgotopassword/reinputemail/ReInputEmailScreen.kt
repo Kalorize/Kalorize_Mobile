@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -115,12 +116,12 @@ fun ReInputEmailScreen(
             value = email.value,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done,
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Email,
+                capitalization = KeyboardCapitalization.None
             ),
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
-
                 }
             ),
             shape = RoundedCornerShape(20.dp),

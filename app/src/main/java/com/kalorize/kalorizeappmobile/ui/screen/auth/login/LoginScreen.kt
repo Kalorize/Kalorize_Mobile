@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,13 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +31,6 @@ import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.body.LoginBody
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +40,7 @@ fun LoginScreen(
     viewModel: MainViewModel,
     navHostController: NavHostController
 ) {
+    val focusManager = LocalFocusManager.current
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current
     val userPreferences = UserPreference(context)
@@ -54,7 +54,7 @@ fun LoginScreen(
         mutableStateOf(false)
     }
     val loginResponse = remember {
-        mutableStateOf(LoginResponse(status = "" , data = null))
+        mutableStateOf(LoginResponse(status = "", data = null))
     }
     val loading = remember {
         mutableStateOf(false)
@@ -102,7 +102,17 @@ fun LoginScreen(
 
             TextField(
                 value = email.value,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Email,
+                    capitalization = KeyboardCapitalization.None
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
                 onValueChange = {
                     email.value = it
                 },
@@ -114,10 +124,7 @@ fun LoginScreen(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
-
-
             )
-
             Text(
                 text = "Password",
                 style = TextStyle(
@@ -132,7 +139,17 @@ fun LoginScreen(
 
             TextField(
                 value = password.value,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Password,
+                    capitalization = KeyboardCapitalization.None
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
                 onValueChange = {
                     password.value = it
                 },
@@ -151,7 +168,11 @@ fun LoginScreen(
                     } else {
                         painterResource(id = R.drawable.hidepassword)
                     }
-                    IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                    IconButton(
+                        onClick = {
+                            passwordVisibility.value = !passwordVisibility.value
+                        }
+                    ) {
                         Icon(painter = image, contentDescription = "password Toggle")
                     }
                 }
@@ -204,11 +225,11 @@ fun LoginScreen(
 
             }
 
-            LaunchedEffect(key1 = loginResponse.value){
+            LaunchedEffect(key1 = loginResponse.value) {
                 Log.d("Check response", loginResponse.toString())
-                if (loginResponse.value.data != null){
+                if (loginResponse.value.data != null) {
                     loading.value = false
-                    if (loginResponse.value.data!!.token.isNotEmpty()){
+                    if (loginResponse.value.data!!.token.isNotEmpty()) {
                         Toast.makeText(
                             context,
                             "Sukses",
@@ -216,12 +237,12 @@ fun LoginScreen(
                         ).show()
                         userPreferences.setUser(loginResponse.value.data!!)
                         viewModel.loginViewModel.cleanLogin()
-                        navHostController.navigate(Screen.Home.route) {
+                        navHostController.navigate(Screen.Questionnare1.route) {
                             popUpTo(Screen.Login.route) {
                                 inclusive = true
                             }
                         }
-                    }else {
+                    } else {
                         Toast.makeText(
                             context,
                             "Login gagal",
@@ -231,7 +252,7 @@ fun LoginScreen(
                 }
             }
         }
-        if (loading.value){
+        if (loading.value) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)

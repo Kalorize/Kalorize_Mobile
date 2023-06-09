@@ -1,9 +1,13 @@
 package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -14,9 +18,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
 @Composable
-fun Questionnaire2() {
+fun Questionnaire2(
+    navController: NavController
+) {
+    val options = listOf(
+        "Extreme (36 hours gym)",
+        "Hard (24 hours gym)",
+        "Medium (12 hours gym)",
+        "Easy (6 hours gym)"
+    )
+    var selectedOption = remember {
+        mutableStateOf("")
+    }
+    val onSelectionChange = { text: String ->
+        selectedOption.value = text
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -27,7 +48,11 @@ fun Questionnaire2() {
         Text(
             text = "Please answer this question\n" +
                     "to know more about you",
-            style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            ),
             modifier = Modifier
                 .align(CenterHorizontally)
         )
@@ -42,71 +67,54 @@ fun Questionnaire2() {
                 .align(Alignment.Start),
             textAlign = TextAlign.Start
         )
-        Spacer(modifier = Modifier.height(28.dp))
-        OutlinedButton(
-            onClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
-            content = {
+        Spacer(modifier = Modifier.height(12.dp))
+
+        options.forEach { text ->
+            Button(
+                onClick = {
+                    onSelectionChange(text)
+                },
+                colors = if (text == selectedOption.value) {
+                    ButtonDefaults.buttonColors(
+                        Color.Black
+                    )
+                } else {
+                    ButtonDefaults.buttonColors(
+                        Color.White
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(50),
+                border = BorderStroke(2.dp, Color(44, 42, 63))
+            ) {
                 Text(
-                    text = "Extreme (36 hours gym)",
-                    style = TextStyle(fontSize = 16.sp)
+                    text = text,
+                    color = if (text == selectedOption.value) {
+                        Color.White
+                    } else {
+                        Color(44, 42, 63)
+                    },
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
                 )
             }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedButton(
-            onClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
-            content = {
-                Text(
-                    text = "Hard (24 hours gym)",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedButton(
-            onClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
-            content = {
-                Text(
-                    text = "Medium (12 hours gym)",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OutlinedButton(
-            onClick = {
-            },
-            modifier = Modifier
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(50),
-            content = {
-                Text(
-                    text = "Easy (6 hours gym)",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(28.dp))
+            Spacer(modifier = Modifier.height(12.dp))
+        }
         Button(
+            enabled = selectedOption.value != "",
             onClick = {
+                Log.i("activity", selectedOption.value)
+                navController.navigate(Screen.Questionnare3.route)
             },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White, // Ubah warna teks di sini
+                contentColor = Color.White,
+                containerColor = Color(0xFFF94917)
             ),
             content = {
                 Text(
@@ -121,5 +129,6 @@ fun Questionnaire2() {
 @Preview(showBackground = true)
 @Composable
 fun Questionnaire2Preview() {
-    Questionnaire2()
+    Questionnaire2(navController = rememberNavController())
 }
+

@@ -12,13 +12,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.R
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
 @Composable
-fun QuestionnaireSuccess() {
+fun QuestionnaireSuccess(
+    navController: NavController
+) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -31,7 +37,8 @@ fun QuestionnaireSuccess() {
                     "You’re all set",
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier
-                .align(CenterHorizontally)
+                .align(CenterHorizontally),
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(28.dp))
         Image(
@@ -42,12 +49,18 @@ fun QuestionnaireSuccess() {
         Spacer(modifier = Modifier.height(28.dp))
         Button(
             onClick = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Questionnare1.route) {
+                        inclusive = true
+                    }
+                }
             },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White, // Ubah warna teks di sini
+                contentColor = Color.White,
+                containerColor = Color(0xFFF94917)
             ),
             content = {
                 Text(
@@ -59,8 +72,9 @@ fun QuestionnaireSuccess() {
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 fun QuestionnaireSuccessPreview() {
-    QuestionnaireSuccess()
+    QuestionnaireSuccess(navController = rememberNavController())
 }

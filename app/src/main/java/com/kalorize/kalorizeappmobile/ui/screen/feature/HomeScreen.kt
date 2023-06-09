@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.ui.screen.feature
 
+
 import android.app.DatePickerDialog
 import android.os.Build
 import android.util.Log
@@ -10,12 +11,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -25,8 +24,18 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import androidx.navigation.NavHostController
 import com.kalorize.kalorizeappmobile.R
 import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginData
@@ -40,9 +49,10 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
+
     navController: NavHostController,
     viewModel: MainViewModel
-){
+) {
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
     val userPreferences = UserPreference(context)
@@ -51,23 +61,24 @@ fun HomeScreen(
     val month = calendar[Calendar.MONTH]
     val dayOfMonth = calendar[Calendar.DAY_OF_MONTH]
     val historyResponse = remember {
-        mutableStateOf(RecommendationHistoryResponse("", null))
+        mutableStateOf(
+            RecommendationHistoryResponse("", null)
+        )
     }
-
     val user = userPreferences.getUser()
     val date = remember {
         mutableStateOf("$year-${month + 1}-$dayOfMonth")
     }
     val datePicker = DatePickerDialog(
         context,
-        {_: DatePicker, selectedYear: Int , selectedMonth: Int, selectedDayOfMonth: Int ->
+        { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDayOfMonth: Int ->
             date.value = "$selectedYear-${selectedMonth + 1}-$selectedDayOfMonth"
         }, year, month, dayOfMonth
     )
     datePicker.datePicker.maxDate = calendar.timeInMillis
 
-    viewModel.homeViewModel.getHistory(user.token,date.value)
-    viewModel.homeViewModel.history.observe(lifecycle){
+    viewModel.homeViewModel.getHistory(user.token, date.value)
+    viewModel.homeViewModel.history.observe(lifecycle) {
         historyResponse.value = it
     }
 
@@ -90,12 +101,14 @@ fun HomeScreen(
                         .align(Alignment.Start),
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
-                    text = "Hey ${user.user.name} \uD83D\uDC4B" )
+                    text = "Hey ${user.user.name} \uD83D\uDC4B"
+                )
 
                 Text(
                     modifier = Modifier
                         .align(Alignment.Start),
-                    text = "Let's Pratice" )
+                    text = "Let's Pratice"
+                )
             }
             AsyncImage(
                 model = user.user.picture,
@@ -119,45 +132,56 @@ fun HomeScreen(
         ) {
             Text(text = convertDateFormat(date.value))
             Icon(
-                painter = painterResource(id = R.drawable.baseline_calendar) ,
-                contentDescription = "Pick Date")
+                painter = painterResource(id = R.drawable.baseline_calendar),
+                contentDescription = "Pick Date"
+            )
 
         }
 
-        if (historyResponse.value.pastRecommendation != null){
+        if (historyResponse.value.pastRecommendation != null) {
             recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!!)
-        }else{
+        } else {
             if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
-                recommendationPage(viewModel, user, lifecycle , date.value)
-            }else{
+                recommendationPage(viewModel, user, lifecycle, date.value)
+            } else {
                 EmptyRecommendation()
             }
         }
 
-        Button(onClick = {
-            userPreferences.setUser(
-                LoginData(
-                token = "",
-                user = LoginUser(
-                    id = -1,
-                    email = "",
-                    password = "",
-                    name = ""
+        Button(
+            onClick = {
+                userPreferences.setUser(
+                    LoginData(
+                        token = "",
+                        user = LoginUser(
+                            id = -1,
+                            email = "",
+                            password = "",
+                            name = ""
+                        )
+                    )
                 )
-            )
-            )
-            navController.popBackStack()
-            navController.navigate(Screen.Login.route)
-        }) {
+                navController.popBackStack()
+                navController.navigate(Screen.Login.route)
+            }
+        ) {
             Text(text = "Log Out")
+        }
+        Button(
+            onClick = {
+                navController.navigate(Screen.Camera.route)
+            }
+        ) {
+            Text(text = "Camera")
         }
 
     }
 
 }
 
-fun monthName(month: Int): String{
-    val name =  when(month){
+
+fun monthName(month: Int): String {
+    val name = when (month) {
         1 -> "Januari"
         2 -> "Februari"
         3 -> "Maret"
@@ -170,18 +194,20 @@ fun monthName(month: Int): String{
         10 -> "Oktober"
         11 -> "November"
         12 -> "Desember"
-        else -> {"Invalid Month"}
+        else -> {
+            "Invalid Month"
+        }
     }
     return name
 }
 
-fun convertDateFormat(date: String): String{
+fun convertDateFormat(date: String): String {
     val newDate = date.split("-")
     return "${newDate[0]} ${monthName(newDate[1].toInt() + 1)} ${newDate[2]}"
 }
 
 @Composable
-fun EmptyRecommendation(){
+fun EmptyRecommendation() {
     Text(text = "This is empty recommendation")
 }
 

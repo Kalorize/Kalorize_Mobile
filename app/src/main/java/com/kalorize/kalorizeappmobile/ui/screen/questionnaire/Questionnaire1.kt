@@ -19,13 +19,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.kalorize.kalorizeappmobile.data.remote.body.RegisterBody
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.theme.WhiteFul
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Questionnaire1() {
+fun Questionnaire1(
+    navController: NavController
+) {
 
     val ageState = remember {
         mutableStateOf("")
@@ -189,8 +192,8 @@ fun Questionnaire1() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Questionnaire1Preview() {
-    Questionnaire1()
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun Questionnaire1Preview() {
+//    Questionnaire1()
+//}

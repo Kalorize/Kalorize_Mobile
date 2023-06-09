@@ -16,6 +16,8 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemai
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
+import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -32,19 +34,15 @@ fun SetupNavGraph(
         composable(route = Screen.Splash.route) {
             AnimatedSplashScreen(navHostController = navController)
         }
-
         composable(route = Screen.OnBoarding.route) {
             OnBoardingScreen(navHostController = navController)
         }
-
         composable(route = Screen.Login.route) {
             LoginScreen(viewModel = viewModel, navHostController = navController)
         }
-
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController , viewModel)
         }
-
         composable(route = Screen.Register.route) {
             RegisterScreen(navHostController = navController, viewModel = viewModel)
         }
@@ -67,6 +65,31 @@ fun SetupNavGraph(
             route = Screen.GetStartedChangePassword.route
         ) {
             GetStartedChangePasswordScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screen.Questionnare1.route
+        ) {
+            Questionnaire1(navController)
+        }
+        composable(
+            route = Screen.Questionnare2.route
+        ) {
+            Questionnaire1(navController)
+        }
+        composable(
+            route = Screen.Questionnare3.route
+        ) {
+            Questionnaire1(navController)
+        }
+        composable(
+            route = Screen.QuestionnareSuccess.route
+        ) {
+            Questionnaire1(navController)
+        }
+        composable(
+            route = Screen.Camera.route
+        ) {
+            PermissionCameraScreen(navController, viewModel)
         }
     }
 }

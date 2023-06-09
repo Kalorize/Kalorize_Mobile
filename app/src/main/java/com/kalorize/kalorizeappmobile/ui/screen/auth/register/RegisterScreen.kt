@@ -58,7 +58,7 @@ fun RegisterScreen(
     val isSamePassword = remember {
         mutableStateOf(false)
     }
-    var response: RegisterResponse? = null
+    var response: RegisterResponse?
 
     val loading = remember {
         mutableStateOf(false)

@@ -1,4 +1,4 @@
-package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
+package com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*

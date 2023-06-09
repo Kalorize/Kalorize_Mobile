@@ -1,4 +1,4 @@
-package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
+package com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
@@ -23,14 +23,13 @@ import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
 @Composable
-fun Questionnaire2(
+fun Questionnaire3(
     navController: NavController
 ) {
     val options = listOf(
-        "Extreme (36 hours gym)",
-        "Hard (24 hours gym)",
-        "Medium (12 hours gym)",
-        "Easy (6 hours gym)"
+        "Reduce Weight",
+        "Increase Muscle",
+        "Be Healthy"
     )
     var selectedOption = remember {
         mutableStateOf("")
@@ -50,15 +49,15 @@ fun Questionnaire2(
                     "to know more about you",
             style = TextStyle(
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                fontWeight = FontWeight.Bold
             ),
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .align(CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(28.dp))
         Text(
-            text = "Choose your preference (in a week)",
+            text = "Choose your main target",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -67,8 +66,7 @@ fun Questionnaire2(
                 .align(Alignment.Start),
             textAlign = TextAlign.Start
         )
-        Spacer(modifier = Modifier.height(12.dp))
-
+        Spacer(modifier = Modifier.height(10.dp))
         options.forEach { text ->
             Button(
                 onClick = {
@@ -106,8 +104,8 @@ fun Questionnaire2(
         Button(
             enabled = selectedOption.value != "",
             onClick = {
-                Log.i("activity", selectedOption.value)
-                navController.navigate(Screen.Questionnare3.route)
+                Log.i("target", selectedOption.value)
+                navController.navigate(Screen.QuestionnareSuccess.route)
             },
             modifier = Modifier
                 .fillMaxWidth(),
@@ -128,7 +126,7 @@ fun Questionnaire2(
 
 @Preview(showBackground = true)
 @Composable
-fun Questionnaire2Preview() {
-    Questionnaire2(navController = rememberNavController())
+fun Questionnaire3Preview() {
+    Questionnaire3(navController = rememberNavController())
 }
 

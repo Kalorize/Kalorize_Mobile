@@ -17,10 +17,10 @@ import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire2
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire3
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.QuestionnaireSuccess
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire1
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire3
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireSuccess
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @OptIn(ExperimentalPagerApi::class)

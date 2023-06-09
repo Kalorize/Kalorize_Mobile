@@ -14,6 +14,8 @@ internal class UserPreference(context: Context) {
         editor.putInt(USER_ID, value.user.id)
         editor.putString(EMAIL, value.user.email)
         editor.putString(PASSWORD, value.user.password)
+        editor.putString(NAME , value.user.name)
+        editor.putString(USER_PICTURE , "https://storage.googleapis.com/${value.user.picture}")
         editor.apply()
     }
 
@@ -52,7 +54,9 @@ internal class UserPreference(context: Context) {
             user = LoginUser(
                 id = preference.getInt(USER_ID, -1),
                 email = preference.getString(EMAIL, "")!!,
-                password = preference.getString(PASSWORD, "")!!
+                password = preference.getString(PASSWORD, "")!!,
+                name = preference.getString(NAME, "")!!,
+                picture = preference.getString(USER_PICTURE , "")
             )
         )
     }
@@ -63,5 +67,7 @@ internal class UserPreference(context: Context) {
         private const val PASSWORD = "password"
         private const val USER_ID = "userId"
         private const val TOKEN = "token"
+        private const val NAME = "name"
+        private const val USER_PICTURE = "user_picture"
     }
 }

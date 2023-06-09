@@ -23,7 +23,6 @@ import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire3
 import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.QuestionnaireSuccess
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SetupNavGraph(

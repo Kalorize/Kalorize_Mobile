@@ -1,22 +1,21 @@
 package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -31,12 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.R
-import com.kalorize.kalorizeappmobile.data.remote.body.LoginBody
-import com.kalorize.kalorizeappmobile.data.remote.body.RegisterBody
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
-import com.kalorize.kalorizeappmobile.ui.theme.WhiteFul
-import com.kalorize.kalorizeappmobile.util.BorderOrder
-import com.kalorize.kalorizeappmobile.util.drawSegmentedBorder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +57,7 @@ fun Questionnaire1(
         mutableStateOf("")
     }
     val focusManager = LocalFocusManager.current
-
+    val context = LocalContext.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -314,21 +308,49 @@ fun Questionnaire1(
         }
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedButton(
-            enabled = selectedOption.value != "" && ageState.value != "",
             onClick = {
-                navController.navigate(Screen.Camera.route)
+                if (selectedOption.value == "") {
+                    Toast.makeText(
+                        context,
+                        "Choose ur gender",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else if (ageState.value == "") {
+                    Toast.makeText(
+                        context,
+                        "Enter your age ",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    navController.navigate(Screen.Camera.route)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(50),
+            colors = if (selectedOption.value != "" && ageState.value != "") {
+                ButtonDefaults.buttonColors(
+                    Color.White
+                )
+            } else {
+                ButtonDefaults.buttonColors(
+                    Color.Black
+                )
+            },
             content = {
-                Image(
+                Icon(
                     modifier = Modifier
                         .height(30.dp)
                         .width(30.dp)
                         .padding(end = 10.dp),
                     painter = painterResource(id = R.drawable.camera),
                     contentDescription = "Camera Icon",
+                    tint = if (selectedOption.value == "" && ageState.value == "") {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
+
                 )
                 Text(
                     text = "Gunakan Kamera",
@@ -336,7 +358,11 @@ fun Questionnaire1(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    color = Color.Black
+                    color = if (selectedOption.value == "" && ageState.value == "") {
+                        Color.White
+                    } else {
+                        Color.Black
+                    }
                 )
             },
             border = BorderStroke(

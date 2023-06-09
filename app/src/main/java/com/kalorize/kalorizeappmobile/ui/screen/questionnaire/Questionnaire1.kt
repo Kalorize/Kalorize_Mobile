@@ -1,35 +1,58 @@
 package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
 
-import android.widget.Toast
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.kalorize.kalorizeappmobile.R
+import com.kalorize.kalorizeappmobile.data.remote.body.LoginBody
 import com.kalorize.kalorizeappmobile.data.remote.body.RegisterBody
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.theme.WhiteFul
+import com.kalorize.kalorizeappmobile.util.BorderOrder
+import com.kalorize.kalorizeappmobile.util.drawSegmentedBorder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Questionnaire1(
     navController: NavController
 ) {
-
+    val options = listOf(
+        "Male",
+        "Female"
+    )
+    var selectedOption = remember {
+        mutableStateOf("")
+    }
+    val onSelectionChange = { text: String ->
+        selectedOption.value = text
+    }
     val ageState = remember {
         mutableStateOf("")
     }
@@ -39,17 +62,23 @@ fun Questionnaire1(
     val weightState = remember {
         mutableStateOf("")
     }
+    val focusManager = LocalFocusManager.current
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
     ) {
         Text(
             text = "Please answer this question\n" +
                     "to know more about you",
-            style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+            style = TextStyle(
+                fontSize = 24.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+            ),
             modifier = Modifier
                 .align(CenterHorizontally)
         )
@@ -65,11 +94,68 @@ fun Questionnaire1(
             textAlign = TextAlign.Start
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Switch(
-            checked = false,
-            onCheckedChange = { /* Handle gender switch */ }
-        )
-        Spacer(modifier = Modifier.height(28.dp))
+
+        Row {
+            options.forEach { text ->
+                Button(
+                    onClick = {
+                        onSelectionChange(text)
+                    },
+                    colors = if (text == selectedOption.value) {
+                        ButtonDefaults.buttonColors(
+                            Color.Black
+                        )
+                    } else {
+                        ButtonDefaults.buttonColors(
+                            Color.White
+                        )
+                    },
+                    modifier = when (text) {
+                        "Male" ->
+                            Modifier
+                                .offset(0.dp, 0.dp)
+                                .height(50.dp)
+                                .width(200.dp)
+                        else ->
+                            Modifier
+                                .offset(
+                                    (-1 * 1).dp, 0.dp
+                                )
+                                .height(50.dp)
+                                .width(200.dp)
+                    },
+                    shape = when (text) {
+                        "Male" -> RoundedCornerShape(
+                            topStart = 30.dp,
+                            topEnd = 0.dp,
+                            bottomStart = 30.dp,
+                            bottomEnd = 0.dp
+                        )
+                        else -> RoundedCornerShape(
+                            topStart = 0.dp,
+                            topEnd = 30.dp,
+                            bottomStart = 0.dp,
+                            bottomEnd = 30.dp
+                        )
+                    },
+                    border = BorderStroke(2.dp, Color(44, 42, 63))
+                ) {
+                    Text(
+                        text = text,
+                        color = if (text == selectedOption.value) {
+                            Color.White
+                        } else {
+                            Color(44, 42, 63)
+                        },
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Age",
             style = TextStyle(
@@ -84,7 +170,17 @@ fun Questionnaire1(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = ageState.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number,
+                capitalization = KeyboardCapitalization.None
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             onValueChange = {
                 ageState.value = it
             },
@@ -96,10 +192,9 @@ fun Questionnaire1(
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
-
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Height",
+            text = "Height (Kg)",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -111,7 +206,17 @@ fun Questionnaire1(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = heightState.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number,
+                capitalization = KeyboardCapitalization.None
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             onValueChange = {
                 heightState.value = it
             },
@@ -125,7 +230,7 @@ fun Questionnaire1(
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Weight",
+            text = "Weight (cm)",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -137,63 +242,122 @@ fun Questionnaire1(
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = weightState.value,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number,
+                capitalization = KeyboardCapitalization.None
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             onValueChange = {
                 weightState.value = it
             },
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 30.dp),
+                .padding(bottom = 20.dp),
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             )
         )
-
         Button(
-            onClick = {
-            },
+            enabled = selectedOption.value != ""
+                    && ageState.value != ""
+                    && heightState.value != ""
+                    && weightState.value != "",
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+                .height(height = 40.dp),
             shape = RoundedCornerShape(50),
             colors = ButtonDefaults.buttonColors(
-                contentColor = Color.White, // Ubah warna teks di sini
+                Color(0xFFF94917)
             ),
-            content = {
-                Text(
-                    text = "Register",
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
-        )
-        Spacer(modifier = Modifier.height(28.dp))
-        Divider()
-        Spacer(modifier = Modifier.height(28.dp))
-        OutlinedButton(
             onClick = {
+                Log.i("Gender", selectedOption.value)
+                Log.i("Age", ageState.value)
+                Log.i("Height", heightState.value)
+                Log.i("Weight", weightState.value)
+                navController.navigate(Screen.Questionnare2.route)
+            },
+        ) {
+            Text(
+                text = "Next",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        Row {
+            Divider(
+                modifier = Modifier
+                    .width(165.dp)
+                    .align(Alignment.CenterVertically)
+                    .padding(end = 10.dp),
+            )
+            Text(
+                text = "Atau"
+            )
+            Divider(
+                modifier = Modifier
+                    .width(165.dp)
+                    .align(Alignment.CenterVertically)
+                    .padding(start = 10.dp),
+            )
+        }
+        Spacer(modifier = Modifier.height(12.dp))
+        OutlinedButton(
+            enabled = selectedOption.value != "" && ageState.value != "",
+            onClick = {
+                navController.navigate(Screen.Camera.route)
             },
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(50),
-//            colors = ButtonDefaults.buttonColors(
-//                contentColor = Color.White, // Ubah warna teks di sini
-//            ),
             content = {
+                Image(
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(end = 10.dp),
+                    painter = painterResource(id = R.drawable.camera),
+                    contentDescription = "Camera Icon",
+                )
                 Text(
                     text = "Gunakan Kamera",
-                    style = TextStyle(fontSize = 16.sp)
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.Black
                 )
-            }
+            },
+            border = BorderStroke(
+                2.dp,
+                Color(44, 42, 63)
+            ),
         )
-        Spacer(modifier = Modifier.height(28.dp))
-        Text(text = "Kamu bisa foto wajahmu untuk mendapatkan\n" +
-                "prediksi berat badan dan tinggi badan")
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = "Kamu bisa foto wajahmu untuk mendapatkan\n" +
+                    "prediksi berat badan dan tinggi badan",
+            style = TextStyle(
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center
+            ),
+        )
     }
 }
 
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun Questionnaire1Preview() {
-//    Questionnaire1()
-//}
+@Preview(showBackground = true)
+@Composable
+fun Questionnaire1Preview() {
+    Questionnaire1(navController = rememberNavController())
+}

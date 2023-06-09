@@ -18,6 +18,9 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
 import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
+import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire3
+import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.QuestionnaireSuccess
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -74,17 +77,17 @@ fun SetupNavGraph(
         composable(
             route = Screen.Questionnare2.route
         ) {
-            Questionnaire1(navController)
+            Questionnaire2(navController)
         }
         composable(
             route = Screen.Questionnare3.route
         ) {
-            Questionnaire1(navController)
+            Questionnaire3(navController)
         }
         composable(
             route = Screen.QuestionnareSuccess.route
         ) {
-            Questionnaire1(navController)
+            QuestionnaireSuccess(navController)
         }
         composable(
             route = Screen.Camera.route

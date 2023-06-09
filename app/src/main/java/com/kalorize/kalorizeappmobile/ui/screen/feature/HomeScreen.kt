@@ -167,14 +167,6 @@ fun HomeScreen(
         ) {
             Text(text = "Log Out")
         }
-        Button(
-            onClick = {
-                navController.navigate(Screen.Camera.route)
-            }
-        ) {
-            Text(text = "Camera")
-        }
-
     }
 
 }

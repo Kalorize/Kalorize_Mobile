@@ -124,8 +124,6 @@ fun LoginScreen(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
-
-
             )
             Text(
                 text = "Password",
@@ -170,7 +168,11 @@ fun LoginScreen(
                     } else {
                         painterResource(id = R.drawable.hidepassword)
                     }
-                    IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
+                    IconButton(
+                        onClick = {
+                            passwordVisibility.value = !passwordVisibility.value
+                        }
+                    ) {
                         Icon(painter = image, contentDescription = "password Toggle")
                     }
                 }
@@ -235,7 +237,7 @@ fun LoginScreen(
                         ).show()
                         userPreferences.setUser(loginResponse.value.data!!)
                         viewModel.loginViewModel.cleanLogin()
-                        navHostController.navigate(Screen.Home.route) {
+                        navHostController.navigate(Screen.Questionnare1.route) {
                             popUpTo(Screen.Login.route) {
                                 inclusive = true
                             }

@@ -42,7 +42,8 @@ fun AnimatedSplashScreen(navHostController: NavHostController) {
         if (user.token.isEmpty()){
             navHostController.navigate(Screen.OnBoarding.route)
         }else {
-            navHostController.navigate(Screen.Home.route)
+//            navHostController.navigate(Screen.Home.route)
+            navHostController.navigate(Screen.Questionnare1.route)
         }
 
 

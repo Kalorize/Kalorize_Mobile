@@ -1,6 +1,7 @@
 package com.kalorize.kalorizeappmobile.ui.screen.feature
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -16,9 +17,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.kalorize.kalorizeappmobile.R
 import com.kalorize.kalorizeappmobile.data.remote.response.FoodItem
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.theme.LightGrey
 import com.kalorize.kalorizeappmobile.ui.theme.Orange0
 import com.kalorize.kalorizeappmobile.ui.theme.Purple40
@@ -26,7 +29,11 @@ import com.kalorize.kalorizeappmobile.ui.theme.Purple40
 @Composable
 fun foodItem(
     item: FoodItem,
-    foodChoice: MutableState<Int>
+    foodChoice: MutableState<Int>? = null,
+    calories: MutableState<Float>? = null,
+    protein: MutableState<Float>? = null,
+    isRecommendation: Boolean,
+    navHostController: NavHostController
 ){
     Column(
         modifier = Modifier
@@ -44,7 +51,10 @@ fun foodItem(
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .height(140.dp)
-                .width(120.dp),
+                .width(120.dp)
+                .clickable {
+                    navHostController.navigate(Screen.FoodDetail.createRoute(item.id.toString()))
+                },
             contentScale = ContentScale.FillBounds
             )
         Text(
@@ -68,21 +78,28 @@ fun foodItem(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
         }
-        Button(
-            colors = if (item.id == foodChoice.value) { ButtonDefaults.buttonColors(
-                Color.LightGray
-            )}else {
-                ButtonDefaults.buttonColors(
-                    Purple40
-                ) },
-            onClick = { foodChoice.value = item.id }) {
-            Text(
-                text = if (item.id == foodChoice.value) {
-                "Dipilih"
-                }else {
-                    "Pilih" },
-                color = Color.White
-            )
+        if (isRecommendation){
+            Button(
+                colors = if (item.id == foodChoice!!.value) { ButtonDefaults.buttonColors(
+                    Color.LightGray
+                )}else {
+                    ButtonDefaults.buttonColors(
+                        Purple40
+                    ) },
+                onClick = {
+                    foodChoice.value = item.id
+                    calories!!.value = item.calories.toString().toFloat()
+                    protein!!.value = item.protein.toString().toFloat()
+                }) {
+                Text(
+                    text = if (item.id == foodChoice.value) {
+                        "Dipilih"
+                    }else {
+                        "Pilih" },
+                    color = Color.White
+                )
+            }
         }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.ui.screen.feature
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,7 @@ import com.kalorize.kalorizeappmobile.data.remote.body.Breakfast
 import com.kalorize.kalorizeappmobile.data.remote.body.ChooseFoodBody
 import com.kalorize.kalorizeappmobile.data.remote.body.Dinner
 import com.kalorize.kalorizeappmobile.data.remote.body.Lunch
+import com.kalorize.kalorizeappmobile.data.remote.response.FoodDetailResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.PastRecommendation
 import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationHistoryResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
@@ -70,12 +72,12 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
                     clearViewModel()
                 }
                 .onFailure {
-
+                    Log.d("Check failed" , it.toString())
                 }
         }
     }
 
-    fun clearViewModel(){
+    private fun clearViewModel(){
         viewModelScope.launch {
             _history.postValue(
                 RecommendationHistoryResponse(
@@ -83,6 +85,24 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
                     pastRecommendation = null
                 )
             )
+        }
+    }
+
+    // Food detail viewmodel
+    private val _foodDetail = MutableLiveData<FoodDetailResponse>()
+    var foodDetail: LiveData<FoodDetailResponse> = _foodDetail
+
+    fun getFoodDetail(token: String , id: String){
+        viewModelScope.launch {
+            apiRepository.getFoodDetail(token, id)
+                .onSuccess {
+                    _foodDetail.postValue(it)
+                }
+                .onFailure {
+                    _foodDetail.postValue(
+                        FoodDetailResponse(status = "Failed" , null)
+                    )
+                }
         }
     }
 }

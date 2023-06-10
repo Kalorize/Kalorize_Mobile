@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.NavHostController
 import com.kalorize.kalorizeappmobile.data.remote.response.FoodItem
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginData
 import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
@@ -34,7 +35,8 @@ fun recommendationPage(
     viewModel: MainViewModel ,
     user: LoginData,
     lifecycle: LifecycleOwner,
-    date: String
+    date: String,
+    navHostController: NavHostController
 ){
     val recommendation = remember {
         mutableStateOf(RecommendationResponse(status = "" , data = null))
@@ -61,6 +63,12 @@ fun recommendationPage(
     val dinnerId = remember {
         mutableStateOf(-1)
     }
+    val breakfastCalories = remember { mutableStateOf(0f) }
+    val breakfastProtein = remember { mutableStateOf(0f) }
+    val lunchCalories = remember { mutableStateOf(0f) }
+    val lunchProtein = remember { mutableStateOf(0f) }
+    val dinnerCalories = remember { mutableStateOf(0f) }
+    val dinnerProtein = remember { mutableStateOf(0f) }
 
     viewModel.homeViewModel.getRecommendation(user.token)
     viewModel.homeViewModel.recommendation.observe(lifecycle){
@@ -71,6 +79,14 @@ fun recommendationPage(
         if (recommendation.value.data != null){
             isDataLoaded.value = true
         }
+    }
+
+    LaunchedEffect(key1 = breakfastProtein.value, key2 = lunchProtein.value, key3 = dinnerProtein.value){
+        protein.value = breakfastProtein.value + lunchProtein.value + dinnerProtein.value
+    }
+
+    LaunchedEffect(key1 = breakfastCalories.value, key2 = lunchCalories.value, key3 = dinnerCalories.value){
+        calories.value = breakfastCalories.value + lunchCalories.value + dinnerCalories.value
     }
 
     if (isDataLoaded.value){
@@ -135,7 +151,7 @@ fun recommendationPage(
             LazyRow(
                 state = rememberLazyListState()){
                 items(items = recommendation.value.data!!.user.reccomendation.breakfast , itemContent = {
-                    foodItem(item = it , breakfastId)
+                    foodItem(item = it , breakfastId , breakfastCalories, breakfastProtein, true , navHostController)
                 })
             }
 
@@ -147,7 +163,7 @@ fun recommendationPage(
             LazyRow(
                 state = rememberLazyListState()){
                 items(items = recommendation.value.data!!.user.reccomendation.lunch , itemContent = {
-                    foodItem(item = it , lunchId)
+                    foodItem(item = it , lunchId , lunchCalories , lunchProtein, true, navHostController)
                 })
             }
 
@@ -159,7 +175,7 @@ fun recommendationPage(
             LazyRow(
                 state = rememberLazyListState()){
                 items(items = recommendation.value.data!!.user.reccomendation.dinner , itemContent = {
-                    foodItem(item = it ,dinnerId)
+                    foodItem(item = it ,dinnerId, dinnerCalories, dinnerProtein, true, navHostController)
                 })
             }
 
@@ -171,6 +187,7 @@ fun recommendationPage(
                 colors = ButtonDefaults.buttonColors(
                     Color(0xFFF94917)
                 ),
+                enabled = calories.value > recommendation.value.data!!.user.reccomendation.calories.toString().toFloat(),
                 onClick = {
                     viewModel.homeViewModel.chooseFood(user.token ,date , breakfastId.value ,lunchId.value , dinnerId.value)
                 }) {

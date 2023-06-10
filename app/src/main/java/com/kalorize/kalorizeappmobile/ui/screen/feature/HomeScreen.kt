@@ -103,6 +103,10 @@ fun HomeScreen(
                 model = user.user.picture,
                 contentDescription = "User Picture",
                 error = painterResource(id = R.drawable.user_icon),
+                modifier = Modifier.
+                        clickable {
+                            navController.navigate(Screen.UserDetail.route)
+                        }
             )
         }
 
@@ -127,12 +131,21 @@ fun HomeScreen(
 
         }
 
+<<<<<<< HEAD
+        if (historyResponse.value.pastRecommendation != null){
+            recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!! , navController)
+        }else{
+            if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
+                recommendationPage(viewModel, user, lifecycle , date.value , navController)
+            }else{
+=======
         if (historyResponse.value.pastRecommendation != null) {
             recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!!)
         } else {
             if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
                 recommendationPage(viewModel, user, lifecycle, date.value)
             } else {
+>>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
                 EmptyRecommendation()
             }
         }
@@ -184,11 +197,22 @@ fun monthName(month: Int): String {
 
 fun convertDateFormat(date: String): String {
     val newDate = date.split("-")
-    return "${newDate[0]} ${monthName(newDate[1].toInt() + 1)} ${newDate[2]}"
+    return "${newDate[2]} ${monthName(newDate[1].toInt() + 1)} ${newDate[0]}"
 }
 
 @Composable
+<<<<<<< HEAD
+fun EmptyRecommendation(){
+    Column(
+        modifier = Modifier.padding(30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "No Recommendation Chosen this day ☹️")
+    }
+=======
 fun EmptyRecommendation() {
     Text(text = "This is empty recommendation")
+>>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
 }
 

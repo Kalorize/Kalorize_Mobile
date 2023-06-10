@@ -73,4 +73,8 @@ class ApiRepository(private val apiService: ApiService) {
             target
         )
     }
+
+    suspend fun getFoodDetail(token: String, id: String): Result<FoodDetailResponse>{
+        return apiService.foodDetail("Bearer $token" ,id)
+    }
 }

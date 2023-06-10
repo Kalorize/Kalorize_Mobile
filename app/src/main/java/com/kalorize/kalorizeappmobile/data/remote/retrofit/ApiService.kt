@@ -7,6 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -60,4 +61,11 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body body: ChooseFoodBody
     ): Result<ChooseFoodResponse>
+
+    @Headers("Content-Type: application/json")
+    @GET("v1/food/{id}")
+    suspend fun foodDetail(
+        @Header("Authorization") token: String,
+        @Path("id") id: String
+    ): Result<FoodDetailResponse>
 }

@@ -11,4 +11,10 @@ sealed class Screen(val route: String) {
     object ChangePassword : Screen("change_password_screen")
     object GetStartedChangePassword:Screen("get_stated_change_password_screen")
 
+    object FoodDetail: Screen("detail/{id}"){
+        fun createRoute(id: String) = "detail/$id"
+    }
+
+    object UserDetail: Screen("user")
+
 }

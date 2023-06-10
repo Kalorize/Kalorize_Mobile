@@ -5,8 +5,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.kalorize.kalorizeappmobile.ui.screen.AnimatedSplashScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.changepassword.ChangePasswordScreen
@@ -16,6 +18,8 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemai
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.foodDetail
+import com.kalorize.kalorizeappmobile.ui.screen.feature.userPage
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -67,6 +71,24 @@ fun SetupNavGraph(
             route = Screen.GetStartedChangePassword.route
         ) {
             GetStartedChangePasswordScreen(navController = navController, viewModel = viewModel)
+        }
+
+        composable(
+            route = Screen.FoodDetail.route,
+            arguments = listOf(navArgument("id") {type = NavType.StringType})
+        ){
+            val id = it.arguments?.getString("id") ?: "-1"
+            foodDetail(viewModel = viewModel, foodId = id , navigateBack = {
+                navController.navigateUp()
+            } )
+        }
+
+        composable(
+            route = Screen.UserDetail.route
+        ){
+            userPage(viewModel = viewModel , navigateBack = {
+                navController.navigateUp()
+            })
         }
     }
 }

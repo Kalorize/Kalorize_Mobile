@@ -37,4 +37,8 @@ class ApiRepository(private val apiService: ApiService) {
     suspend fun chooseFood(token: String, body: ChooseFoodBody): Result<ChooseFoodResponse>{
         return apiService.chooseFood("Bearer $token" ,body)
     }
+
+    suspend fun getFoodDetail(token: String, id: String): Result<FoodDetailResponse>{
+        return apiService.foodDetail("Bearer $token" ,id)
+    }
 }

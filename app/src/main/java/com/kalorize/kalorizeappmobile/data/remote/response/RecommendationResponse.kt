@@ -132,7 +132,6 @@ data class User(
 )
 
 data class Data(
-
 	@field:SerializedName("user")
 	val user: User
 )

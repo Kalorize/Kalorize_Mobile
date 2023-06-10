@@ -1,5 +1,6 @@
 package com.kalorize.kalorizeappmobile.data.remote
 
+import androidx.compose.ui.text.font.FontWeight
 import com.kalorize.kalorizeappmobile.data.remote.body.*
 import com.kalorize.kalorizeappmobile.data.remote.response.*
 import com.kalorize.kalorizeappmobile.data.remote.response.F2hwgResponse
@@ -8,6 +9,7 @@ import com.kalorize.kalorizeappmobile.data.remote.response.RegisterResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
 import com.kalorize.kalorizeappmobile.data.remote.retrofit.ApiService
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class ApiRepository(private val apiService: ApiService) {
 
@@ -46,8 +48,29 @@ class ApiRepository(private val apiService: ApiService) {
     suspend fun chooseFood(token: String, body: ChooseFoodBody): Result<ChooseFoodResponse> {
         return apiService.chooseFood("Bearer $token", body)
     }
-    suspend fun f2hwg(token: String, file: MultipartBody.Part): Result<F2hwgResponse> {
-        return apiService.f2hwg("Bearer $token",file )
 
+    suspend fun f2hwg(token: String, file: MultipartBody.Part): Result<F2hwgResponse> {
+        return apiService.f2hwg("Bearer $token", file)
+
+    }
+
+    suspend fun foodRec(
+        token: String,
+        gender: RequestBody,
+        age: Float,
+        height: Float,
+        weight: Float,
+        activity: RequestBody,
+        target: RequestBody,
+    ): Result<RecommendationResponse> {
+        return apiService.foodRec(
+            "Bearer $token",
+            gender,
+            age,
+            weight,
+            height,
+            activity,
+            target
+        )
     }
 }

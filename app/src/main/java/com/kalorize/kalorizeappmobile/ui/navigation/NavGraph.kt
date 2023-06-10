@@ -81,7 +81,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Questionnare3.route
         ) {
-            Questionnaire3(navController)
+            Questionnaire3(navController,viewModel)
         }
         composable(
             route = Screen.QuestionnareSuccess.route

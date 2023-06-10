@@ -15,6 +15,7 @@ import com.kalorize.kalorizeappmobile.data.remote.response.LoginResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.RegisterResponse
 import com.kalorize.kalorizeappmobile.data.remote.response.SimpleResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface ApiService {
@@ -70,11 +71,21 @@ interface ApiService {
     ): Result<ChooseFoodResponse>
 
     @Multipart
-//    @Headers("Content-Type : multipart/form-data")
     @POST("v1/f2hwg")
     suspend fun f2hwg(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
     ): Result<F2hwgResponse>
 
+    @Multipart
+    @PUT("v1/user")
+    suspend fun foodRec(
+        @Header("Authorization") token: String,
+        @Part("gender") gender: RequestBody,
+        @Part("age") age: Float,
+        @Part("weight") weight: Float,
+        @Part("height") height: Float,
+        @Part("activity") activity: RequestBody,
+        @Part("target") target: RequestBody,
+    ): Result<RecommendationResponse>
 }

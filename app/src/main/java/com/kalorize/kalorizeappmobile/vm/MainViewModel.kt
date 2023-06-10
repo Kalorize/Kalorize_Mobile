@@ -10,6 +10,7 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemai
 import com.kalorize.kalorizeappmobile.ui.screen.auth.register.RegisterViewModel
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeViewModel
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.CameraViewModel
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireViewModel
 
 
 class MainViewModel(private val apiRepository: ApiRepository): ViewModel() {
@@ -21,4 +22,5 @@ class MainViewModel(private val apiRepository: ApiRepository): ViewModel() {
     val getStartedChangePasswordViewModel = GetStartedChangePasswordViewModel(this.apiRepository)
     val homeViewModel = HomeViewModel(this.apiRepository)
     val cameraViewModel = CameraViewModel(this.apiRepository)
+    val questionnareViewModel = QuestionnaireViewModel(this.apiRepository)
 }

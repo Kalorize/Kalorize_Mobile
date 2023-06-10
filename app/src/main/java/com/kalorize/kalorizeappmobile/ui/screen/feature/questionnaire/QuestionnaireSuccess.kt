@@ -27,10 +27,10 @@ fun QuestionnaireSuccess(
 ) {
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(start = 16.dp, top = 40.dp, end = 16.dp),
     ) {
         Text(
             text = "Great!!\n" +

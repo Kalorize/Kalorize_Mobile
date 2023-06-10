@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,12 +25,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.R
+import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +44,7 @@ fun Questionnaire1(
         "Male",
         "Female"
     )
-    var selectedOption = remember {
+    val selectedOption = remember {
         mutableStateOf("")
     }
     val onSelectionChange = { text: String ->
@@ -58,11 +61,12 @@ fun Questionnaire1(
     }
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+    val userPreferences = UserPreference(context)
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(start = 16.dp, top = 40.dp, end = 16.dp)
             .verticalScroll(rememberScrollState()),
     ) {
         Text(
@@ -188,7 +192,7 @@ fun Questionnaire1(
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Height (Kg)",
+            text = "Height (cm)",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -224,7 +228,7 @@ fun Questionnaire1(
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Weight (cm)",
+            text = "Weight (Kg)",
             style = TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
@@ -273,10 +277,14 @@ fun Questionnaire1(
                 Color(0xFFF94917)
             ),
             onClick = {
-                Log.i("Gender", selectedOption.value)
+                Log.i("Gender", selectedOption.value.uppercase())
                 Log.i("Age", ageState.value)
                 Log.i("Height", heightState.value)
                 Log.i("Weight", weightState.value)
+                userPreferences.setGender(selectedOption.value.uppercase())
+                userPreferences.setAge(ageState.value.toFloat())
+                userPreferences.setHeight(heightState.value.toFloat())
+                userPreferences.setWeight(weightState.value.toFloat())
                 navController.navigate(Screen.Questionnare2.route)
             },
         ) {
@@ -345,12 +353,11 @@ fun Questionnaire1(
                         .padding(end = 10.dp),
                     painter = painterResource(id = R.drawable.camera),
                     contentDescription = "Camera Icon",
-                    tint = if (selectedOption.value == "" && ageState.value == "") {
-                        Color.White
-                    } else {
+                    tint = if (selectedOption.value != "" && ageState.value != "") {
                         Color.Black
+                    } else {
+                        Color.White
                     }
-
                 )
                 Text(
                     text = "Gunakan Kamera",
@@ -358,10 +365,10 @@ fun Questionnaire1(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    color = if (selectedOption.value == "" && ageState.value == "") {
-                        Color.White
-                    } else {
+                    color = if (selectedOption.value != "" && ageState.value != "") {
                         Color.Black
+                    } else {
+                        Color.White
                     }
                 )
             },

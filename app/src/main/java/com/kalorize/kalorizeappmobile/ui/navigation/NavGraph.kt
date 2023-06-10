@@ -18,11 +18,18 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemai
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
+<<<<<<< HEAD
 import com.kalorize.kalorizeappmobile.ui.screen.feature.foodDetail
 import com.kalorize.kalorizeappmobile.ui.screen.feature.userPage
+=======
+import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire1
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire3
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireSuccess
+>>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SetupNavGraph(
@@ -36,19 +43,15 @@ fun SetupNavGraph(
         composable(route = Screen.Splash.route) {
             AnimatedSplashScreen(navHostController = navController)
         }
-
         composable(route = Screen.OnBoarding.route) {
             OnBoardingScreen(navHostController = navController)
         }
-
         composable(route = Screen.Login.route) {
             LoginScreen(viewModel = viewModel, navHostController = navController)
         }
-
         composable(route = Screen.Home.route) {
             HomeScreen(navController = navController , viewModel)
         }
-
         composable(route = Screen.Register.route) {
             RegisterScreen(navHostController = navController, viewModel = viewModel)
         }
@@ -72,6 +75,7 @@ fun SetupNavGraph(
         ) {
             GetStartedChangePasswordScreen(navController = navController, viewModel = viewModel)
         }
+<<<<<<< HEAD
 
         composable(
             route = Screen.FoodDetail.route,
@@ -89,6 +93,32 @@ fun SetupNavGraph(
             userPage(viewModel = viewModel , navigateBack = {
                 navController.navigateUp()
             })
+=======
+        composable(
+            route = Screen.Questionnare1.route
+        ) {
+            Questionnaire1(navController)
+        }
+        composable(
+            route = Screen.Questionnare2.route
+        ) {
+            Questionnaire2(navController)
+        }
+        composable(
+            route = Screen.Questionnare3.route
+        ) {
+            Questionnaire3(navController,viewModel)
+        }
+        composable(
+            route = Screen.QuestionnareSuccess.route
+        ) {
+            QuestionnaireSuccess(navController)
+        }
+        composable(
+            route = Screen.Camera.route
+        ) {
+            PermissionCameraScreen(navController, viewModel)
+>>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
         }
     }
 }

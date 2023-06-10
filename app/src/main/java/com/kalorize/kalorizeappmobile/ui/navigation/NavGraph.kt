@@ -17,13 +17,12 @@ import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire1
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire2
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.Questionnaire3
-import com.kalorize.kalorizeappmobile.ui.screen.questionnaire.QuestionnaireSuccess
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire1
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire3
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireSuccess
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SetupNavGraph(
@@ -82,7 +81,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Questionnare3.route
         ) {
-            Questionnaire3(navController)
+            Questionnaire3(navController,viewModel)
         }
         composable(
             route = Screen.QuestionnareSuccess.route

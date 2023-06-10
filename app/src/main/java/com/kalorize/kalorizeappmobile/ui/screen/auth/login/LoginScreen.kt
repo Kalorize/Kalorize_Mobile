@@ -237,17 +237,27 @@ fun LoginScreen(
                         ).show()
                         userPreferences.setUser(loginResponse.value.data!!)
                         viewModel.loginViewModel.cleanLogin()
-                        navHostController.navigate(Screen.Questionnare1.route) {
-                            popUpTo(Screen.Login.route) {
-                                inclusive = true
+                        if (loginResponse.value.data!!.user.activity == null){
+                            navHostController.navigate(Screen.Questionnare1.route) {
+                                popUpTo(Screen.Login.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }else{
+                            navHostController.navigate(Screen.Home.route) {
+                                popUpTo(Screen.Login.route) {
+                                    inclusive = true
+                                }
                             }
                         }
+
                     } else {
                         Toast.makeText(
                             context,
                             "Login gagal",
                             Toast.LENGTH_SHORT
                         ).show()
+                        loading.value = false
                     }
                 }
             }

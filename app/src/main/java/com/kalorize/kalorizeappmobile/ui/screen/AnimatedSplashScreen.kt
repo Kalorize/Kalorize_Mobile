@@ -35,15 +35,16 @@ fun AnimatedSplashScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     val userPreferences = UserPreference(context)
     val user = userPreferences.getUser()
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         startAnimation = true
         delay(4000)
         navHostController.popBackStack()
-        if (user.token.isEmpty()){
+        if (user.token.isEmpty()) {
             navHostController.navigate(Screen.OnBoarding.route)
-        }else {
-//            navHostController.navigate(Screen.Home.route)
+        } else if (user.user.activity == "") {
             navHostController.navigate(Screen.Questionnare1.route)
+        } else {
+            navHostController.navigate(Screen.Home.route)
         }
 
 
@@ -52,7 +53,7 @@ fun AnimatedSplashScreen(navHostController: NavHostController) {
 }
 
 @Composable
-fun Splash(alpha: Float){
+fun Splash(alpha: Float) {
     Box(
         modifier = Modifier
             .background(Color.White) // Mengubah warna latar belakang menjadi putih

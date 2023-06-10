@@ -1,7 +1,8 @@
-package com.kalorize.kalorizeappmobile.ui.screen.questionnaire
+package com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -12,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.kalorize.kalorizeappmobile.R
+import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 
 @Composable
@@ -38,13 +43,33 @@ fun Questionnaire2(
     val onSelectionChange = { text: String ->
         selectedOption.value = text
     }
-
+    val context = LocalContext.current
+    val userPreferences = UserPreference(context)
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(start = 16.dp, top = 40.dp, end = 16.dp),
     ) {
+        Row(
+            modifier = Modifier.clickable {
+                navController.popBackStack()
+            }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_orange),
+                contentDescription = null,
+                tint = Color(red = 243, green = 73, blue = 23)
+            )
+            Text(
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                text = "Back",
+            )
+        }
+        Spacer(modifier = Modifier.height(28.dp))
         Text(
             text = "Please answer this question\n" +
                     "to know more about you",
@@ -106,7 +131,8 @@ fun Questionnaire2(
         Button(
             enabled = selectedOption.value != "",
             onClick = {
-                Log.i("activity", selectedOption.value)
+                Log.i("activity", selectedOption.value.replace("\\s*\\([^()]*\\)\\s*".toRegex(), "").uppercase())
+                userPreferences.setActivity(selectedOption.value.replace("\\s*\\([^()]*\\)\\s*".toRegex(), "").uppercase())
                 navController.navigate(Screen.Questionnare3.route)
             },
             modifier = Modifier

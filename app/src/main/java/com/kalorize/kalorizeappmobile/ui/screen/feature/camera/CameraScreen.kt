@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
@@ -47,8 +48,10 @@ import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.response.F2hwgResponse
+import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
 import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.util.reduceFileImage
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
@@ -331,32 +334,44 @@ private fun CameraContent(
                 }
             }
         )
-
         TransparentClipLayout(
             modifier = Modifier.fillMaxSize(),
             width = 300.dp,
             height = 400.dp,
             offsetY = 150.dp
         )
-
-        CameraUiController(
-            enabled = cameraState?.value?.type == CameraState.Type.OPEN,
-            onClickShutter = {
-                isLoading.value = true
-                takePhoto(
-                    context,
-                    imageCapture,
-                    onImageSaved = {
-                        onImageSaveSuccess(it)
-                        isLoading.value = false
-                    },
-                    onError = {
-                        isLoading.value = false
-                        onImageSaveFailed(it)
-                    }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                modifier = Modifier
+                    .padding(top = 30.dp),
+                text = "Put your face inside the frame and take a\npicture.\nMake sure it is not cut or has any glare.",
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                style = TextStyle(
+                    fontSize = 20.sp
                 )
-            },
-        )
+            )
+            CameraUiController(
+                enabled = cameraState?.value?.type == CameraState.Type.OPEN,
+                onClickShutter = {
+                    isLoading.value = true
+                    takePhoto(
+                        context,
+                        imageCapture,
+                        onImageSaved = {
+                            onImageSaveSuccess(it)
+                            isLoading.value = false
+                        },
+                        onError = {
+                            isLoading.value = false
+                            onImageSaveFailed(it)
+                        }
+                    )
+                },
+            )
+        }
         if (isLoading.value) {
             CircularProgressIndicator(
                 color = Color.Red,
@@ -462,6 +477,7 @@ fun TransparentClipLayout(
 
     }
 }
+
 
 @Composable
 private fun CameraUiController(

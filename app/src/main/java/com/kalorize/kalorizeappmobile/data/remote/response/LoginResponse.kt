@@ -1,6 +1,5 @@
 package com.kalorize.kalorizeappmobile.data.remote.response
 
-import androidx.compose.ui.text.font.FontWeight
 import com.google.gson.annotations.SerializedName
 
 data class LoginResponse(
@@ -20,6 +19,7 @@ data class LoginData(
 	@field:SerializedName("token")
 	val token: String
 )
+
 data class LoginUser(
 
 	@field:SerializedName("password")
@@ -35,24 +35,23 @@ data class LoginUser(
 	val name: String,
 
 	@field:SerializedName("gender")
-	val gender: String? = null,
+	val gender: String? = "",
 
 	@field:SerializedName("picture")
-	val picture: String? = null,
+	val picture: String? = "",
 
 	@field:SerializedName("weight")
-	val weight: Float? = null,
+	val weight: Float? = 0.toFloat(),
 
 	@field:SerializedName("age")
-	val age: Float? = null,
+	val age: Float? = 0.toFloat(),
 
 	@field:SerializedName("height")
-	val height: Float? = null,
+	val height: Float? = 0.toFloat(),
 
 	@field:SerializedName("activity")
-	val activity: String? = null,
+	val activity: String? = "",
 
 	@field:SerializedName("target")
-	val target: String? = null,
-
+	val target: String? = "",
 )

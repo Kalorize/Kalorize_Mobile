@@ -155,7 +155,7 @@ fun Questionnaire3(
                 enabled = selectedOption.value != "",
                 onClick = {
                     Log.i(
-                        "target",
+                        "target ",
                         selectedOption.value
                             .replace("\\s*\\([^()]*\\)\\s*".toRegex(), "")
                             .replace("\\s".toRegex(), "_")

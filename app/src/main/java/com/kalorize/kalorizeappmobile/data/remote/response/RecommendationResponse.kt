@@ -17,7 +17,7 @@ data class Reccomendation(
 	val lunch: List<FoodItem>,
 
 	@field:SerializedName("protein")
-	val protein: Int,
+	val protein: Float,
 
 	@field:SerializedName("id")
 	val id: Int,
@@ -101,7 +101,7 @@ data class User(
 	val activity: String,
 
 	@field:SerializedName("weight")
-	val weight: Int,
+	val weight: Float,
 
 	@field:SerializedName("foodHistories")
 	val foodHistories: List<Any>,

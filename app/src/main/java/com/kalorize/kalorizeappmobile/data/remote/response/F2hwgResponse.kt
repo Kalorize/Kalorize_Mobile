@@ -7,8 +7,8 @@ data class F2hwgResponse(
     val gender: String,
 
     @SerializedName("height")
-    val height: Long,
+    val height: Float,
 
     @SerializedName("weight")
-    val weight: Long
+    val weight: Float
 )

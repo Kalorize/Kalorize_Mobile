@@ -53,8 +53,10 @@ import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.response.F2hwgResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.ui.theme.Orange0
 import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.util.reduceFileImage
+import com.kalorize.kalorizeappmobile.util.rotateFile
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
@@ -88,21 +90,25 @@ fun CameraScreen(
             value = ProcessCameraProvider.getInstance(context).await()
         }
     )
+    val isLoading = remember {
+        mutableStateOf(false)
+    }
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val userPreferences = UserPreference(context)
     val user = userPreferences.getUser()
     val f2hwgResponse = remember {
         mutableStateOf(
-            F2hwgResponse("", 0, 0)
+            F2hwgResponse("", 0f, 0f)
         )
     }
 
     LaunchedEffect(key1 = f2hwgResponse.value, block = {
         Log.d("Check response " , f2hwgResponse.value.toString())
+        isLoading.value = false
         if (f2hwgResponse.value.height > 0f && f2hwgResponse.value.weight > 0f){
-            userPreferences.setHeight(f2hwgResponse.value.height.toFloat())
-            userPreferences.setHeight(f2hwgResponse.value.weight.toFloat())
+            userPreferences.setHeight(f2hwgResponse.value.height)
+            userPreferences.setWeight(f2hwgResponse.value.weight)
             navController.navigate(Screen.Questionnare2.route)
         }
     })
@@ -127,13 +133,15 @@ fun CameraScreen(
                         provider = provider,
                         modifier = Modifier.padding(innerPadding),
                         onImageSaveSuccess = { uri ->
+                            isLoading.value = true
                             Log.i("uri path", uri!!.toString())
                             if (uri != null) {
                                 var imagePath = getPath(context, uri!!)
                                 Log.i("file path", imagePath.toString())
                                 val fileFromString = File(imagePath)
                                 val file = reduceFileImage(fileFromString)
-                                Log.i("file path file", file.toString())
+                                val rotateImage = rotateFile(file,false)
+                                Log.i("file path file", rotateImage.toString())
                                 val requestImageFile =
                                     fileFromString.asRequestBody("image/jpeg".toMediaType())
                                 val imageMultipart: MultipartBody.Part =
@@ -194,6 +202,16 @@ fun CameraScreen(
                         .wrapContentSize()
                 )
             }
+        }
+
+        if (isLoading.value){
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .size(80.dp),
+                strokeWidth = 6.dp,
+                color = Orange0
+            )
         }
 
     }

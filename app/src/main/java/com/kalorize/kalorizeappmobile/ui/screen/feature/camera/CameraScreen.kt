@@ -51,6 +51,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.response.F2hwgResponse
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
 import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.util.reduceFileImage
@@ -97,6 +98,14 @@ fun CameraScreen(
         )
     }
 
+    LaunchedEffect(key1 = f2hwgResponse.value, block = {
+        Log.d("Check response " , f2hwgResponse.value.toString())
+        if (f2hwgResponse.value.height > 0f && f2hwgResponse.value.weight > 0f){
+            userPreferences.setHeight(f2hwgResponse.value.height.toFloat())
+            userPreferences.setHeight(f2hwgResponse.value.weight.toFloat())
+            navController.navigate(Screen.Questionnare2.route)
+        }
+    })
     Box {
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) }

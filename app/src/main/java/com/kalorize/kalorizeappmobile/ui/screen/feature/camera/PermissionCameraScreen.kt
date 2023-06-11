@@ -8,7 +8,6 @@ import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,16 +25,13 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 
 private val REQUIRED_PERMISSIONS = buildList {
     add(Manifest.permission.CAMERA)
-
-    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
+    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    add(Manifest.permission.READ_EXTERNAL_STORAGE)
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -48,7 +44,6 @@ fun PermissionCameraScreen(
     val lifecycleOwner = LocalLifecycleOwner.current
     val multiplePermissionState =
         rememberMultiplePermissionsState(permissions = REQUIRED_PERMISSIONS)
-
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->

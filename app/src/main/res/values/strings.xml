@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KalorizeAppMobile</string>
+    <string name="app_name">Kalorize</string>
     <string name="message_success_upload_image">Gambar sukses diupload</string>
     <string name="message_failed_upload_image">Gagal menyimpan gambar</string>
     <string name="message_error_do_not_disturb_mode_enabled">Nonaktifkan mode waktu tidur dan coba lagi</string>

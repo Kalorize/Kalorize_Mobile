@@ -25,8 +25,8 @@ class CameraViewModel(private val apiRepository: ApiRepository) : ViewModel() {
                 .onFailure {
                     _predictHwg.postValue(
                         F2hwgResponse(
-                            height = 0,
-                            weight = 0,
+                            height = 0f,
+                            weight = 0f,
                             gender = "Gagal memprediksi"
                         )
                     )

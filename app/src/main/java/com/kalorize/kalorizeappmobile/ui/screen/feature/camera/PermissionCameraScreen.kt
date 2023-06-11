@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
@@ -30,8 +31,11 @@ import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
 private val REQUIRED_PERMISSIONS = buildList {
     add(Manifest.permission.CAMERA)
-    add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    add(Manifest.permission.READ_EXTERNAL_STORAGE)
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+        add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        add(Manifest.permission.READ_EXTERNAL_STORAGE)
+    }
+
 }
 
 @OptIn(ExperimentalPermissionsApi::class)

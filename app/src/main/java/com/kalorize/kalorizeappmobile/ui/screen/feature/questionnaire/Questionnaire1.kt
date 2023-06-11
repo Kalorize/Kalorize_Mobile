@@ -330,6 +330,8 @@ fun Questionnaire1(
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    userPreferences.setAge(ageState.value.toFloat())
+                    userPreferences.setGender(selectedOption.value.uppercase())
                     navController.navigate(Screen.Camera.route)
                 }
             },

@@ -141,25 +141,6 @@ fun HomeScreen(
             }
         }
 
-        Button(
-            onClick = {
-                userPreferences.setUser(
-                    LoginData(
-                        token = "",
-                        user = LoginUser(
-                            id = -1,
-                            email = "",
-                            password = "",
-                            name = ""
-                        )
-                    )
-                )
-                navController.popBackStack()
-                navController.navigate(Screen.Login.route)
-            }
-        ) {
-            Text(text = "Log Out")
-        }
     }
 
 }

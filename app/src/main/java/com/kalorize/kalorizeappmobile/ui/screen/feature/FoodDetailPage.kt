@@ -84,13 +84,7 @@ fun foodDetailPage(
     val ingredients = foodDetail.foodData!!.foodItem.ingredients.split(",")
     val cookingStep = foodDetail.foodData.foodItem.instructions.split(",")
 
-    Icon(
-        imageVector = Icons.Default.ArrowBack,
-        contentDescription = "Back",
-        modifier = Modifier
-            .padding(top = 15.dp, start = 15.dp)
-            .clickable { onBackClick() }
-    )
+
 
     Column(
         modifier = Modifier
@@ -99,13 +93,25 @@ fun foodDetailPage(
             .fillMaxWidth(),
     ) {
 
-        Text(
-            modifier = Modifier.padding(vertical = 10.dp),
-            text = "Detail",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center
-        )
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 10.dp),) {
+
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back",
+                modifier = Modifier
+                    .clickable { onBackClick() }
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Detail",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+
 
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -114,17 +120,18 @@ fun foodDetailPage(
             AsyncImage(
                 modifier = Modifier
                     .padding(vertical = 20.dp)
-                    .height(140.dp)
-                    .width(240.dp),
+                    .size(240.dp),
                 model = foodDetail.foodData.foodItem.imageUrl,
                 contentDescription = "Food Image",
-                contentScale = ContentScale.Fit,
+                contentScale = ContentScale.Crop,
                 error = painterResource(id = R.drawable.picture_placeholder)
             )
         }
 
         Text(
-            modifier = Modifier.padding(vertical =15.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical =15.dp),
             text = foodDetail.foodData.foodItem.name,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
@@ -133,10 +140,19 @@ fun foodDetailPage(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = foodDetail.foodData.foodItem.calories.toString() + " Kcal")
-            Text(text = foodDetail.foodData.foodItem.protein.toString() + " gr")
+            Text(text = "Calories" , fontWeight = FontWeight.Bold , fontSize = 16.sp)
+            Text(text = foodDetail.foodData.foodItem.calories.toString() + " Kcal" , fontWeight = FontWeight.Bold , fontSize = 16.sp)
+
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Protein" , fontWeight = FontWeight.Bold , fontSize = 16.sp)
+            Text(text = foodDetail.foodData.foodItem.protein.toString() + " gr" , fontWeight = FontWeight.Bold , fontSize = 16.sp)
         }
         Text(
             modifier = Modifier.padding(vertical = 15.dp),

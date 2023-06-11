@@ -131,21 +131,12 @@ fun HomeScreen(
 
         }
 
-<<<<<<< HEAD
         if (historyResponse.value.pastRecommendation != null){
             recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!! , navController)
         }else{
             if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
                 recommendationPage(viewModel, user, lifecycle , date.value , navController)
-            }else{
-=======
-        if (historyResponse.value.pastRecommendation != null) {
-            recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!!)
-        } else {
-            if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
-                recommendationPage(viewModel, user, lifecycle, date.value)
-            } else {
->>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
+            }else {
                 EmptyRecommendation()
             }
         }
@@ -201,8 +192,7 @@ fun convertDateFormat(date: String): String {
 }
 
 @Composable
-<<<<<<< HEAD
-fun EmptyRecommendation(){
+fun EmptyRecommendation() {
     Column(
         modifier = Modifier.padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -210,9 +200,4 @@ fun EmptyRecommendation(){
     ) {
         Text(text = "No Recommendation Chosen this day ☹️")
     }
-=======
-fun EmptyRecommendation() {
-    Text(text = "This is empty recommendation")
->>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
 }
-

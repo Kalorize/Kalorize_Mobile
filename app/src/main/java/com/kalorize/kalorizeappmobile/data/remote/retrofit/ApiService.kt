@@ -71,14 +71,13 @@ interface ApiService {
         @Body body: ChooseFoodBody
     ): Result<ChooseFoodResponse>
 
-<<<<<<< HEAD
     @Headers("Content-Type: application/json")
     @GET("v1/food/{id}")
     suspend fun foodDetail(
         @Header("Authorization") token: String,
         @Path("id") id: String
     ): Result<FoodDetailResponse>
-=======
+
     @Multipart
     @POST("v1/f2hwg")
     suspend fun f2hwg(
@@ -97,5 +96,5 @@ interface ApiService {
         @Part("activity") activity: RequestBody,
         @Part("target") target: RequestBody,
     ): Result<RecommendationResponse>
->>>>>>> 0bfe94d9ca77911158da4dc09e117028ea87f669
+
 }

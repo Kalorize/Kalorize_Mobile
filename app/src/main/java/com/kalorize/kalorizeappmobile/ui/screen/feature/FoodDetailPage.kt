@@ -88,10 +88,9 @@ fun foodDetailPage(
 
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
             .padding(15.dp)
             .fillMaxWidth(),
-    ) {
+    ){
         CenterAlignedTopAppBar(
             navigationIcon = {
                 Icon(
@@ -115,78 +114,84 @@ fun foodDetailPage(
             },
         )
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .size(240.dp)
-                    .clip(shape = RoundedCornerShape(20.dp)),
-                model = foodDetail.foodData.foodItem.imageUrl,
-                contentDescription = "Food Image",
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.picture_placeholder)
-            )
-        }
-
-        Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 15.dp),
-            text = foodDetail.foodData.foodItem.name,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            textAlign = TextAlign.Center
-        )
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth(),
         ) {
-            Text(text = "Calories", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(vertical = 10.dp)
+                        .size(240.dp)
+                        .clip(shape = RoundedCornerShape(20.dp)),
+                    model = foodDetail.foodData.foodItem.imageUrl,
+                    contentDescription = "Food Image",
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.picture_placeholder)
+                )
+            }
+
             Text(
-                text = foodDetail.foodData.foodItem.calories.toString() + " Kcal",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp),
+                text = foodDetail.foodData.foodItem.name,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
             )
 
-        }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Calories", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = foodDetail.foodData.foodItem.calories.toString() + " Kcal",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(text = "Protein", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = "Protein", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                Text(
+                    text = foodDetail.foodData.foodItem.protein.toString() + " gr",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
             Text(
-                text = foodDetail.foodData.foodItem.protein.toString() + " gr",
+                modifier = Modifier.padding(vertical = 15.dp),
+                text = "Ingredient",
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start
             )
+
+            for (i in ingredients.indices) {
+                Text(text = "${i + 1} . ${ingredients[i]}")
+            }
+
+            Text(
+                modifier = Modifier.padding(vertical = 15.dp),
+                text = "Cooking Steps",
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Start
+            )
+
+            for (i in cookingStep.indices) {
+                Text(text = "${i + 1} . ${cookingStep[i]}")
+            }
+
         }
-        Text(
-            modifier = Modifier.padding(vertical = 15.dp),
-            text = "Ingredient",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Start
-        )
-
-        for (i in ingredients.indices) {
-            Text(text = "${i + 1} . ${ingredients[i]}")
-        }
-
-        Text(
-            modifier = Modifier.padding(vertical = 15.dp),
-            text = "Cooking Steps",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Start
-        )
-
-        for (i in cookingStep.indices) {
-            Text(text = "${i + 1} . ${cookingStep[i]}")
-        }
-
     }
 }

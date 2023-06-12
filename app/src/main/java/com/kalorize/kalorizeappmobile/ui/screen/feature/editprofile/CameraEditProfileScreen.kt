@@ -1,19 +1,14 @@
-package com.kalorize.kalorizeappmobile.ui.screen.feature.camera
+package com.kalorize.kalorizeappmobile.ui.screen.feature.editprofile
+
 
 import com.kalorize.kalorizeappmobile.R
-import android.content.ContentUris
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
@@ -31,16 +26,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.viewinterop.AndroidView
@@ -48,11 +37,10 @@ import androidx.concurrent.futures.await
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.navigation.compose.rememberNavController
 import com.kalorize.kalorizeappmobile.data.local.UserPreference
-import com.kalorize.kalorizeappmobile.data.remote.response.F2hwgResponse
-import com.kalorize.kalorizeappmobile.ui.navigation.Screen
-import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
+import com.kalorize.kalorizeappmobile.data.remote.response.LoginData
+import com.kalorize.kalorizeappmobile.data.remote.response.LoginUser
+import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
 import com.kalorize.kalorizeappmobile.ui.theme.Orange0
 import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.util.reduceFileImage
@@ -75,7 +63,7 @@ private const val MIN_SCALE_RATIO = 1.0f
 
 
 @Composable
-fun CameraScreen(
+fun CameraEditProfileScreen(
     navController: NavController,
     viewModel: MainViewModel
 ) {
@@ -96,21 +84,34 @@ fun CameraScreen(
     val scope = rememberCoroutineScope()
     val userPreferences = UserPreference(context)
     val user = userPreferences.getUser()
-    val f2hwgResponse = remember {
-        mutableStateOf(
-            F2hwgResponse("", 0f, 0f)
-        )
+    val getMeResponse = remember {
+        mutableStateOf(RecommendationResponse(null, ""))
     }
 
-    LaunchedEffect(key1 = f2hwgResponse.value, block = {
-        Log.d("Check response " , f2hwgResponse.value.toString())
-        isLoading.value = false
-        if (f2hwgResponse.value.height > 0f && f2hwgResponse.value.weight > 0f){
-            userPreferences.setHeight(f2hwgResponse.value.height)
-            userPreferences.setWeight(f2hwgResponse.value.weight)
-            navController.navigate(Screen.Questionnare2.route)
-        }
-    })
+//    LaunchedEffect(key1 = getMeResponse.value, block = {
+//        Log.d("Check response ", getMeResponse.value.toString())
+//        isLoading.value = false
+//        userPreferences.setUser(
+//            LoginData(
+//                token = user.token,
+//                user = LoginUser(
+//                    password = user.user.password,
+//                    id = user.user.id,
+//                    email = user.user.email,
+//                    name = user.user.name,
+//                    gender = user.user.gender,
+//                    picture = getMeResponse.value.data!!.user.picture,
+//                    weight = user.user.weight,
+//                    age = user.user.age,
+//                    height = user.user.height,
+//                    activity = user.user.activity,
+//                    target = user.user.target
+//                )
+//            )
+//        )
+//        navController.popBackStack()
+//
+//    })
     Box {
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) }
@@ -139,7 +140,7 @@ fun CameraScreen(
                                 Log.i("file path", imagePath.toString())
                                 val fileFromString = File(imagePath)
                                 val file = reduceFileImage(fileFromString)
-                                val rotateImage = rotateFile(file,false)
+                                val rotateImage = rotateFile(file, false)
                                 Log.i("file path file", rotateImage.toString())
                                 val requestImageFile =
                                     fileFromString.asRequestBody("image/jpeg".toMediaType())
@@ -149,14 +150,33 @@ fun CameraScreen(
                                         fileFromString.name,
                                         requestImageFile
                                     )
-                                viewModel.cameraViewModel.predictHwg(user.token, imageMultipart)
-                                viewModel.cameraViewModel.predictHwg.observe(lifecycleOwner) {
-                                    f2hwgResponse.value = it
+                                viewModel.homeViewModel.uploadPhotoProfile(
+                                    user.token,
+                                    imageMultipart
+                                )
+                                viewModel.homeViewModel.uploadPhotoProfile.observe(lifecycleOwner) {
+                                    getMeResponse.value = it
                                 }
+                                userPreferences.setUser(
+                                    LoginData(
+                                        token = user.token,
+                                        user = LoginUser(
+                                            password = user.user.password,
+                                            id = user.user.id,
+                                            email = user.user.email,
+                                            name = user.user.name,
+                                            gender = user.user.gender,
+                                            picture = getMeResponse.value.data!!.user.picture, //error
+                                            weight = user.user.weight,
+                                            age = user.user.age,
+                                            height = user.user.height,
+                                            activity = user.user.activity,
+                                            target = user.user.target
+                                        )
+                                    )
+                                )
+                                navController.popBackStack()
 
-                                Log.i("predict hwg", f2hwgResponse.value.gender)
-                                Log.i("predict hwg", f2hwgResponse.value.weight.toString())
-                                Log.i("predict hwg", f2hwgResponse.value.height.toString())
                             }
                             val message = if (uri != null) {
                                 context.getString(R.string.message_success_upload_image)
@@ -201,7 +221,7 @@ fun CameraScreen(
             }
         }
 
-        if (isLoading.value){
+        if (isLoading.value) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -227,9 +247,15 @@ private fun CameraContent(
     val lifecycleOwner = LocalLifecycleOwner.current
     var currentLensFacing: CameraSelector by remember {
         mutableStateOf(
-            CameraSelector.DEFAULT_FRONT_CAMERA
+            if (provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            } else {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            }
         )
     }
+    val canFlipCamera = provider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) &&
+            provider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
     var currentAspectRatio: Int by remember { mutableStateOf(AspectRatio.RATIO_16_9) }
     val previewView = remember { PreviewView(context) }
     val imageCapture = remember(currentAspectRatio) {
@@ -358,27 +384,12 @@ private fun CameraContent(
                 }
             }
         )
-        TransparentClipLayout(
-            modifier = Modifier.fillMaxSize(),
-            width = 300.dp,
-            height = 400.dp,
-            offsetY = 150.dp
-        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Text(
-                modifier = Modifier
-                    .padding(top = 30.dp),
-                text = "Put your face inside the frame and take a\npicture.\nMake sure it is not cut or has any glare.",
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 20.sp
-                )
-            )
+        ) {
             CameraUiController(
                 enabled = cameraState?.value?.type == CameraState.Type.OPEN,
+                canFlipCamera = canFlipCamera,
                 onClickShutter = {
                     isLoading.value = true
                     takePhoto(
@@ -394,6 +405,15 @@ private fun CameraContent(
                         }
                     )
                 },
+                onClickFlipCamera = {
+                    val camera = bindingCamera ?: return@CameraUiController
+                    currentLensFacing =
+                        if (camera.cameraInfo.lensFacing == CameraSelector.LENS_FACING_BACK) {
+                            CameraSelector.DEFAULT_FRONT_CAMERA
+                        } else {
+                            CameraSelector.DEFAULT_BACK_CAMERA
+                        }
+                }
             )
         }
         if (isLoading.value) {
@@ -458,57 +478,15 @@ private fun CameraContent(
     }
 }
 
-@Composable
-fun TransparentClipLayout(
-    modifier: Modifier,
-    width: Dp,
-    height: Dp,
-    offsetY: Dp
-) {
-
-    val offsetInPx: Float
-    val widthInPx: Float
-    val heightInPx: Float
-
-    with(LocalDensity.current) {
-        offsetInPx = offsetY.toPx()
-        widthInPx = width.toPx()
-        heightInPx = height.toPx()
-    }
-    androidx.compose.foundation.Canvas(modifier = modifier) {
-
-        val canvasWidth = size.width
-
-        with(drawContext.canvas.nativeCanvas) {
-            val checkPoint = saveLayer(null, null)
-
-            drawRect(
-                Color(0x77000000)
-            )
-
-            drawRoundRect(
-                topLeft = Offset(
-                    x = (canvasWidth - widthInPx) / 2,
-                    y = offsetInPx
-                ),
-                size = Size(widthInPx, heightInPx),
-                cornerRadius = CornerRadius(30f, 30f),
-                color = Color.Transparent,
-                blendMode = BlendMode.Clear
-            )
-            restoreToCount(checkPoint)
-        }
-
-    }
-}
-
 
 @Composable
 private fun CameraUiController(
     enabled: Boolean,
     onClickShutter: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    canFlipCamera: Boolean,
+    onClickFlipCamera: () -> Unit,
+    ) {
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -526,6 +504,23 @@ private fun CameraUiController(
                 .padding(32.dp)
                 .size(70.dp)
         )
+
+        if (canFlipCamera) {
+            IconButton(
+                onClick = onClickFlipCamera,
+                enabled = enabled,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 52.dp)
+                    .size(32.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_flip_camera),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
+        }
     }
 }
 

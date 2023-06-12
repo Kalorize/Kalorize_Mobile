@@ -14,14 +14,13 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.changepassw
 import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.otp.OtpScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemail.ReInputEmailScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
-import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.*
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
-import com.kalorize.kalorizeappmobile.ui.screen.feature.foodDetail
+import com.kalorize.kalorizeappmobile.ui.screen.feature.editprofile.PermissionCameraEditScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire1
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire3
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireSuccess
-import com.kalorize.kalorizeappmobile.ui.screen.feature.userPage
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
@@ -108,6 +107,21 @@ fun SetupNavGraph(
             route = Screen.Camera.route
         ) {
             PermissionCameraScreen(navController, viewModel)
+        }
+        composable(
+            route = Screen.EditProfile.route
+        ){
+            EditProfileScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screen.EditPaswword.route
+        ){
+            EditPasswordScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screen.CameraEdit.route
+        ){
+            PermissionCameraEditScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

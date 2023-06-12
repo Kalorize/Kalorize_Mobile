@@ -111,10 +111,8 @@ fun userDetail(
 
     Column(
         modifier = Modifier
-            .padding(15.dp)
             .fillMaxWidth()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(15.dp),
     ) {
         TopAppBar(
             navigationIcon = {
@@ -132,159 +130,169 @@ fun userDetail(
                 Text(text = "")
             }
         )
-
-        Box(
+        Column(
             modifier = Modifier
-                .clickable {
-                    scope.launch {
-                        sheetState.show()
-                    }
-                }
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .size(140.dp)
-                    .clip(CircleShape)
-                    .border(BorderStroke(0.1.dp, Color.Black), CircleShape),
-                model = picture.value,
-                contentDescription = "User Picture",
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.person),
-            )
+
             Box(
                 modifier = Modifier
-                    .clip(CircleShape)
-                    .background(Orange1)
-                    .size(32.dp)
-                    .align(Alignment.BottomEnd),
-                contentAlignment = Alignment.Center
+                    .clickable {
+                        scope.launch {
+                            sheetState.show()
+                        }
+                    }
             ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .size(140.dp)
+                        .clip(CircleShape)
+                        .border(BorderStroke(0.1.dp, Color.Black), CircleShape),
+                    model = picture.value,
+                    contentDescription = "User Picture",
+                    contentScale = ContentScale.Crop,
+                    error = painterResource(id = R.drawable.person),
+                )
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(Orange1)
+                        .size(32.dp)
+                        .align(Alignment.BottomEnd),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_camera_alt_24),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
+            if (sheetState.isVisible) {
+                ModalBottomSheet(
+                    sheetState = sheetState,
+                    onDismissRequest = {
+                        scope.launch {
+                            sheetState.hide()
+                        }
+                    },
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .height(200.dp)
+                    ) {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(height = 40.dp),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0xFFF94917)
+                            ),
+                            onClick = {
+                                navController.navigate(Screen.CameraEdit.route)
+                            },
+                        ) {
+                            Text(text = "Camera")
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(height = 40.dp),
+                            shape = RoundedCornerShape(50),
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0xFFF94917)
+                            ),
+                            onClick = {
+                            },
+                        ) {
+                            Text(text = "Gallery")
+                        }
+                    }
+
+                }
+            }
+            Spacer(
+                modifier = Modifier
+                    .height(12.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.EditProfile.route)
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = name,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(12.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_camera_alt_24),
+                    modifier = Modifier
+                        .size(20.dp),
+                    painter = painterResource(id = R.drawable.edit),
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Color.Black
                 )
             }
-        }
-        if (sheetState.isVisible) {
-            ModalBottomSheet(
-                sheetState = sheetState,
-                onDismissRequest = {
-                    scope.launch {
-                        sheetState.hide()
-                    }
-                },
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .height(200.dp)
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(height = 40.dp),
-                        shape = RoundedCornerShape(50),
-                        colors = ButtonDefaults.buttonColors(
-                            Color(0xFFF94917)
-                        ),
-                        onClick = {
-                        },
-                    ) {
-                        Text(text = "Camera")
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Button(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(height = 40.dp),
-                        shape = RoundedCornerShape(50),
-                        colors = ButtonDefaults.buttonColors(
-                            Color(0xFFF94917)
-                        ),
-                        onClick = {
-                        },
-                    ) {
-                        Text(text = "Gallery")
-                    }
-                }
-
-            }
-        }
-        Spacer(
-            modifier = Modifier
-                .height(12.dp)
-        )
-        Row(
-            modifier = Modifier
-                .clickable { },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = name,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Email",
+                content = email,
+                isPassword = false
             )
-            Spacer(modifier = Modifier.width(12.dp))
-            Icon(
-                modifier = Modifier
-                    .size(20.dp),
-                painter = painterResource(id = R.drawable.edit),
-                contentDescription = null,
-                tint = Color.Black
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Change Password",
+                content = "",
+                isPassword = true
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Age",
+                content = age.value,
+                isPassword = false
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Gender",
+                content = gender,
+                isPassword = false
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Weight",
+                content = "${weight.value} Kg",
+                isPassword = false
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            listTile(
+                navController = navController,
+                title = "Height",
+                content = "${height.value} cm",
+                isPassword = false
+            )
+            Spacer(modifier = Modifier.height(50.dp))
+            listTile(
+                navController = navController,
+                title = "Logout",
+                content = "",
+                isPassword = false,
+                isLogout = true,
             )
         }
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Email",
-            content = email,
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Change Password",
-            content = "",
-            isPassword = true
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Age",
-            content = age.value,
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Gender",
-            content = gender,
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Weight",
-            content = "${weight.value} Kg",
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        listTile(
-            navController = navController,
-            title = "Height",
-            content = "${height.value} cm",
-            isPassword = false
-        )
-        Spacer(modifier = Modifier.height(50.dp))
-        listTile(
-            navController = navController,
-            title = "Logout",
-            content = "",
-            isPassword = false,
-            isLogout = true,
-        )
     }
 }
 
@@ -325,8 +333,10 @@ fun listTile(
                     userPreferences.deleteUser()
                     navController.popBackStack()
                     navController.navigate(Screen.Login.route)
+                } else if (title == "Change Password") {
+                    navController.navigate(Screen.EditPaswword.route)
                 } else {
-
+                    navController.navigate(Screen.EditProfile.route)
                 }
             },
         trailingContent = {

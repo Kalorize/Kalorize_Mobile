@@ -1,6 +1,7 @@
 package com.kalorize.kalorizeappmobile.ui.screen.feature
 
 import android.util.Log
+import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,20 +11,20 @@ import com.kalorize.kalorizeappmobile.data.remote.body.Breakfast
 import com.kalorize.kalorizeappmobile.data.remote.body.ChooseFoodBody
 import com.kalorize.kalorizeappmobile.data.remote.body.Dinner
 import com.kalorize.kalorizeappmobile.data.remote.body.Lunch
-import com.kalorize.kalorizeappmobile.data.remote.response.FoodDetailResponse
-import com.kalorize.kalorizeappmobile.data.remote.response.PastRecommendation
-import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationHistoryResponse
-import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
+import com.kalorize.kalorizeappmobile.data.remote.response.*
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
-class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
+class HomeViewModel(private val apiRepository: ApiRepository) : ViewModel() {
     // To get recommendation history by date
     private val _history = MutableLiveData<RecommendationHistoryResponse>()
     var history: LiveData<RecommendationHistoryResponse> = _history
 
-    fun getHistory(token: String , date: String){
+    fun getHistory(token: String, date: String) {
         viewModelScope.launch {
-            apiRepository.getRecommendationHistory(token , date)
+            apiRepository.getRecommendationHistory(token, date)
                 .onSuccess {
                     _history.postValue(it)
                 }
@@ -42,7 +43,7 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
     private val _recommendation = MutableLiveData<RecommendationResponse>()
     var recommendation: LiveData<RecommendationResponse> = _recommendation
 
-    fun getRecommendation(token: String){
+    fun getRecommendation(token: String) {
         viewModelScope.launch {
             apiRepository.getRecommendation(token)
                 .onSuccess {
@@ -60,24 +61,26 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
     }
 
     //to post food choice
-    fun chooseFood(token: String ,date: String , breakfastId: Int, lunchId: Int , dinnerId: Int ){
+    fun chooseFood(token: String, date: String, breakfastId: Int, lunchId: Int, dinnerId: Int) {
         viewModelScope.launch {
-            apiRepository.chooseFood(token , ChooseFoodBody(
-                date,
-                breakfast = Breakfast(breakfastId),
-                lunch = Lunch(lunchId),
-                dinner = Dinner(dinnerId)
-            ))
+            apiRepository.chooseFood(
+                token, ChooseFoodBody(
+                    date,
+                    breakfast = Breakfast(breakfastId),
+                    lunch = Lunch(lunchId),
+                    dinner = Dinner(dinnerId)
+                )
+            )
                 .onSuccess {
                     clearViewModel()
                 }
                 .onFailure {
-                    Log.d("Check failed" , it.toString())
+                    Log.d("Check failed", it.toString())
                 }
         }
     }
 
-    private fun clearViewModel(){
+    private fun clearViewModel() {
         viewModelScope.launch {
             _history.postValue(
                 RecommendationHistoryResponse(
@@ -92,7 +95,7 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
     private val _foodDetail = MutableLiveData<FoodDetailResponse>()
     var foodDetail: LiveData<FoodDetailResponse> = _foodDetail
 
-    fun getFoodDetail(token: String , id: String){
+    fun getFoodDetail(token: String, id: String) {
         viewModelScope.launch {
             apiRepository.getFoodDetail(token, id)
                 .onSuccess {
@@ -100,7 +103,74 @@ class HomeViewModel(private val apiRepository: ApiRepository): ViewModel() {
                 }
                 .onFailure {
                     _foodDetail.postValue(
-                        FoodDetailResponse(status = "Failed" , null)
+                        FoodDetailResponse(status = "Failed", null)
+                    )
+                }
+        }
+    }
+
+    private val _uploadPhotoProfile = MutableLiveData<RecommendationResponse>()
+    var uploadPhotoProfile: LiveData<RecommendationResponse> = _uploadPhotoProfile
+    fun uploadPhotoProfile(token: String, file: MultipartBody.Part) {
+        viewModelScope.launch {
+            apiRepository.editPhotoProfile(token,file)
+                .onSuccess {
+                    _uploadPhotoProfile.postValue(it)
+                }
+                .onFailure {
+                    _uploadPhotoProfile.postValue(
+                        RecommendationResponse(
+                            status = it.message!!,
+                            data = null
+                        )
+                    )
+                }
+        }
+    }
+
+    private val _editProfile = MutableLiveData<RecommendationResponse>()
+    var editProfile: LiveData<RecommendationResponse> = _editProfile
+    fun editProfile(
+        token: String,
+        name: RequestBody,
+        gender: RequestBody,
+        age: Float,
+        height: Float,
+        weight: Float,
+    ) {
+        viewModelScope.launch {
+            apiRepository.editProfile(token,name,gender,age,height,weight)
+                .onSuccess{
+                    _editProfile.postValue(it)
+                }
+                .onFailure {
+                    _editProfile.postValue(
+                        RecommendationResponse(
+                            status = it.message!!,
+                            data = null
+                        )
+                    )
+                }
+        }
+    }
+
+    private val _editPassword = MutableLiveData<RecommendationResponse>()
+    var editPassword: LiveData<RecommendationResponse> = _editPassword
+    fun editPassword(
+        token: String,
+        password:RequestBody
+    ) {
+        viewModelScope.launch {
+            apiRepository.editPassword(token,password)
+                .onSuccess{
+                    _editProfile.postValue(it)
+                }
+                .onFailure {
+                    _editProfile.postValue(
+                        RecommendationResponse(
+                            status = it.message!!,
+                            data = null
+                        )
                     )
                 }
         }

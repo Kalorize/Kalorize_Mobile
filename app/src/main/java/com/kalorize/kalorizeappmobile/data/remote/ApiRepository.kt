@@ -74,7 +74,32 @@ class ApiRepository(private val apiService: ApiService) {
         )
     }
 
-    suspend fun getFoodDetail(token: String, id: String): Result<FoodDetailResponse>{
-        return apiService.foodDetail("Bearer $token" ,id)
+    suspend fun getFoodDetail(token: String, id: String): Result<FoodDetailResponse> {
+        return apiService.foodDetail("Bearer $token", id)
+    }
+
+    suspend fun editPhotoProfile(
+        token: String,
+        file: MultipartBody.Part
+    ): Result<RecommendationResponse> {
+        return apiService.editPhotoProfile("Bearer $token", file)
+    }
+
+    suspend fun editProfile(
+        token: String,
+        name: RequestBody,
+        gender: RequestBody,
+        age: Float,
+        height: Float,
+        weight: Float,
+    ): Result<RecommendationResponse> {
+        return apiService.editProfile("Bearer $token", name, age, gender, weight, height)
+    }
+
+    suspend fun editPassword(
+        token: String,
+        password:RequestBody,
+    ):Result<RecommendationResponse>{
+        return apiService.editPassword("Bearer $token", password)
     }
 }

@@ -51,7 +51,6 @@ fun RegisterScreen(
     val confirmPasswordState = remember {
         mutableStateOf("")
     }
-
     val confirmedPasswordVisibility = remember {
         mutableStateOf(false)
     }

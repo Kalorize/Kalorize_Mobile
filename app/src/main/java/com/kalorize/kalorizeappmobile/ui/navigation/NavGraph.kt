@@ -45,7 +45,7 @@ fun SetupNavGraph(
             LoginScreen(viewModel = viewModel, navHostController = navController)
         }
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController , viewModel)
+            HomeScreen(navController = navController, viewModel)
         }
         composable(route = Screen.Register.route) {
             RegisterScreen(navHostController = navController, viewModel = viewModel)
@@ -72,20 +72,17 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.FoodDetail.route,
-            arguments = listOf(navArgument("id") {type = NavType.StringType})
-        ){
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
             val id = it.arguments?.getString("id") ?: "-1"
-            foodDetail(viewModel = viewModel, foodId = id , navigateBack = {
+            foodDetail(viewModel = viewModel, foodId = id, navigateBack = {
                 navController.navigateUp()
-            } )
+            })
         }
-
         composable(
             route = Screen.UserDetail.route
         ) {
-            userPage(viewModel = viewModel, navigateBack = {
-                navController.navigateUp()
-            })
+            userPage(viewModel = viewModel, navController)
         }
         composable(
             route = Screen.Questionnare1.route
@@ -100,7 +97,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Questionnare3.route
         ) {
-            Questionnaire3(navController,viewModel)
+            Questionnaire3(navController, viewModel)
         }
         composable(
             route = Screen.QuestionnareSuccess.route

@@ -96,5 +96,4 @@ interface ApiService {
         @Part("activity") activity: RequestBody,
         @Part("target") target: RequestBody,
     ): Result<RecommendationResponse>
-
 }

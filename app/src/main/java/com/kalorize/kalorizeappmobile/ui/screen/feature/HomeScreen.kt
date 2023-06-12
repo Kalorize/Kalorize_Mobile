@@ -21,10 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
 import androidx.navigation.NavHostController
 import com.kalorize.kalorizeappmobile.R
@@ -74,14 +77,13 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(bottom = 30.dp, top = 30.dp, start = 15.dp, end = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 30.dp, top = 30.dp, start = 15.dp, end = 15.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -90,6 +92,8 @@ fun HomeScreen(
                         .align(Alignment.Start),
                     fontWeight = FontWeight.Bold,
                     fontSize = 25.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     text = "Hey ${user.user.name} \uD83D\uDC4B"
                 )
 
@@ -102,18 +106,22 @@ fun HomeScreen(
             AsyncImage(
                 model = user.user.picture,
                 contentDescription = "User Picture",
-                error = painterResource(id = R.drawable.user_icon),
-                modifier = Modifier.
-                        clickable {
-                            navController.navigate(Screen.UserDetail.route)
-                        }
+                error = painterResource(id = R.drawable.person),
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(Screen.UserDetail.route)
+                    }
+                    .size(52.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.FillBounds
             )
         }
-
-
+        Spacer(
+            modifier = Modifier
+                .height(10.dp)
+        )
         Row(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .clip(shape = RoundedCornerShape(20.dp))
                 .background(color = LightGrey)
@@ -131,16 +139,18 @@ fun HomeScreen(
 
         }
 
-        if (historyResponse.value.pastRecommendation != null){
-            recommendationHistoryPage(recommendation = historyResponse.value.pastRecommendation!! , navController)
-        }else{
+        if (historyResponse.value.pastRecommendation != null) {
+            recommendationHistoryPage(
+                recommendation = historyResponse.value.pastRecommendation!!,
+                navController
+            )
+        } else {
             if (date.value == "${calendar[Calendar.YEAR]}-${calendar[Calendar.MONTH] + 1}-${calendar[Calendar.DAY_OF_MONTH]}") {
-                recommendationPage(viewModel, user, lifecycle , date.value , navController)
-            }else {
+                recommendationPage(viewModel, user, lifecycle, date.value, navController)
+            } else {
                 EmptyRecommendation()
             }
         }
-
     }
 
 }

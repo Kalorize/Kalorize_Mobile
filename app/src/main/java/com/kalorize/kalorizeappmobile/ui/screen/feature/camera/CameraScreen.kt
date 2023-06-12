@@ -72,7 +72,6 @@ import java.util.*
 private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
 private const val PHOTO_TYPE = "image/jpeg"
 private const val MIN_SCALE_RATIO = 1.0f
-private const val filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS"
 
 
 @Composable

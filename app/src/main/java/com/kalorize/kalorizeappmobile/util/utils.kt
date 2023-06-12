@@ -12,16 +12,6 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -126,7 +116,7 @@ fun reduceFileImage(file: File): File {
     var streamLength: Int
     do {
         val bmpStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, bmpStream) // error android 10
         val bmpPicByteArray = bmpStream.toByteArray()
         streamLength = bmpPicByteArray.size
         compressQuality -= 5
@@ -134,6 +124,7 @@ fun reduceFileImage(file: File): File {
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
     return file
 }
+
 
 fun rotateFile(file: File, isBackCamera: Boolean = false) {
     val matrix = Matrix()
@@ -146,149 +137,3 @@ fun rotateFile(file: File, isBackCamera: Boolean = false) {
     val result = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     result.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(file))
 }
-
-enum class BorderOrder {
-    Start, Center, End
-}
-
-fun Modifier.drawSegmentedBorder(
-    strokeWidth: Dp,
-    color: Color,
-    cornerPercent: Int,
-    borderOrder: BorderOrder,
-    drawDivider: Boolean = false
-) = composed(
-    factory = {
-
-        val density = LocalDensity.current
-        val strokeWidthPx = density.run { strokeWidth.toPx() }
-
-        Modifier.drawBehind {
-            val width = size.width
-            val height = size.height
-            val cornerRadius = height * cornerPercent / 100
-
-            when (borderOrder) {
-                BorderOrder.Start -> {
-
-                    drawLine(
-                        color = color,
-                        start = Offset(x = width, y = 0f),
-                        end = Offset(x = cornerRadius, y = 0f),
-                        strokeWidth = strokeWidthPx
-                    )
-
-                    // Top left arc
-                    drawArc(
-                        color = color,
-                        startAngle = 180f,
-                        sweepAngle = 90f,
-                        useCenter = false,
-                        topLeft = Offset.Zero,
-                        size = Size(cornerRadius * 2, cornerRadius * 2),
-                        style = Stroke(width = strokeWidthPx)
-                    )
-                    drawLine(
-                        color = color,
-                        start = Offset(x = 0f, y = cornerRadius),
-                        end = Offset(x = 0f, y = height - cornerRadius),
-                        strokeWidth = strokeWidthPx
-                    )
-                    // Bottom left arc
-                    drawArc(
-                        color = color,
-                        startAngle = 90f,
-                        sweepAngle = 90f,
-                        useCenter = false,
-                        topLeft = Offset(x = 0f, y = height - 2 * cornerRadius),
-                        size = Size(cornerRadius * 2, cornerRadius * 2),
-                        style = Stroke(width = strokeWidthPx)
-                    )
-                    drawLine(
-                        color = color,
-                        start = Offset(x = cornerRadius, y = height),
-                        end = Offset(x = width, y = height),
-                        strokeWidth = strokeWidthPx
-                    )
-                }
-                BorderOrder.Center -> {
-                    drawLine(
-                        color = color,
-                        start = Offset(x = 0f, y = 0f),
-                        end = Offset(x = width, y = 0f),
-                        strokeWidth = strokeWidthPx
-                    )
-                    drawLine(
-                        color = color,
-                        start = Offset(x = 0f, y = height),
-                        end = Offset(x = width, y = height),
-                        strokeWidth = strokeWidthPx
-                    )
-
-                    if (drawDivider) {
-                        drawLine(
-                            color = color,
-                            start = Offset(x = 0f, y = 0f),
-                            end = Offset(x = 0f, y = height),
-                            strokeWidth = strokeWidthPx
-                        )
-                    }
-                }
-                else -> {
-
-                    if (drawDivider) {
-                        drawLine(
-                            color = color,
-                            start = Offset(x = 0f, y = 0f),
-                            end = Offset(x = 0f, y = height),
-                            strokeWidth = strokeWidthPx
-                        )
-                    }
-
-                    drawLine(
-                        color = color,
-                        start = Offset(x = 0f, y = 0f),
-                        end = Offset(x = width - cornerRadius, y = 0f),
-                        strokeWidth = strokeWidthPx
-                    )
-
-                    // Top right arc
-                    drawArc(
-                        color = color,
-                        startAngle = 270f,
-                        sweepAngle = 90f,
-                        useCenter = false,
-                        topLeft = Offset(x = width - cornerRadius * 2, y = 0f),
-                        size = Size(cornerRadius * 2, cornerRadius * 2),
-                        style = Stroke(width = strokeWidthPx)
-                    )
-                    drawLine(
-                        color = color,
-                        start = Offset(x = width, y = cornerRadius),
-                        end = Offset(x = width, y = height - cornerRadius),
-                        strokeWidth = strokeWidthPx
-                    )
-                    // Bottom right arc
-                    drawArc(
-                        color = color,
-                        startAngle = 0f,
-                        sweepAngle = 90f,
-                        useCenter = false,
-                        topLeft = Offset(
-                            x = width - 2 * cornerRadius,
-                            y = height - 2 * cornerRadius
-                        ),
-                        size = Size(cornerRadius * 2, cornerRadius * 2),
-                        style = Stroke(width = strokeWidthPx)
-                    )
-                    drawLine(
-                        color = color,
-                        start = Offset(x = 0f, y = height),
-                        end = Offset(x = width -cornerRadius, y = height),
-                        strokeWidth = strokeWidthPx
-                    )
-                }
-            }
-        }
-    }
-)

@@ -83,6 +83,22 @@ internal class UserPreference(context: Context) {
         sharedPreferences.remove("activity-profiling")
         sharedPreferences.apply()
     }
+    fun deleteUser(){
+        val sharedPreferences = preference.edit()
+        sharedPreferences.remove(TOKEN)
+        sharedPreferences.remove(USER_ID)
+        sharedPreferences.remove(EMAIL)
+        sharedPreferences.remove(PASSWORD)
+        sharedPreferences.remove(NAME)
+        sharedPreferences.remove(USER_PICTURE)
+        sharedPreferences.remove(GENDER)
+        sharedPreferences.remove(WEIGHT)
+        sharedPreferences.remove(AGE)
+        sharedPreferences.remove(HEIGHT)
+        sharedPreferences.remove(ACTIVITY)
+        sharedPreferences.remove(TARGET)
+        sharedPreferences.apply()
+    }
 
     fun bringEmail(email: String) {
         val sharedPreferences = preference.edit()

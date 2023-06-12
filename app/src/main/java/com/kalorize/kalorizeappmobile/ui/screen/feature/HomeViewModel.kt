@@ -60,6 +60,17 @@ class HomeViewModel(private val apiRepository: ApiRepository) : ViewModel() {
         }
     }
 
+    fun clearRecommendation(){
+        viewModelScope.launch {
+            _recommendation.postValue(
+                RecommendationResponse(
+                    status = "",
+                    data = null
+                )
+            )
+        }
+    }
+
     //to post food choice
     fun chooseFood(token: String, date: String, breakfastId: Int, lunchId: Int, dinnerId: Int) {
         viewModelScope.launch {

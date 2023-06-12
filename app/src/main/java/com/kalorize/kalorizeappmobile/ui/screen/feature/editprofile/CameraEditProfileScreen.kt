@@ -41,6 +41,7 @@ import com.kalorize.kalorizeappmobile.data.local.UserPreference
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginData
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginUser
 import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
+import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.theme.Orange0
 import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.util.reduceFileImage
@@ -87,31 +88,23 @@ fun CameraEditProfileScreen(
     val getMeResponse = remember {
         mutableStateOf(RecommendationResponse(null, ""))
     }
+    val isBackCamera = remember {
+        mutableStateOf(true)
+    }
 
-//    LaunchedEffect(key1 = getMeResponse.value, block = {
-//        Log.d("Check response ", getMeResponse.value.toString())
-//        isLoading.value = false
-//        userPreferences.setUser(
-//            LoginData(
-//                token = user.token,
-//                user = LoginUser(
-//                    password = user.user.password,
-//                    id = user.user.id,
-//                    email = user.user.email,
-//                    name = user.user.name,
-//                    gender = user.user.gender,
-//                    picture = getMeResponse.value.data!!.user.picture,
-//                    weight = user.user.weight,
-//                    age = user.user.age,
-//                    height = user.user.height,
-//                    activity = user.user.activity,
-//                    target = user.user.target
-//                )
-//            )
-//        )
-//        navController.popBackStack()
-//
-//    })
+    LaunchedEffect(key1 = getMeResponse.value, block = {
+        isLoading.value = false
+        if (getMeResponse.value.data != null){
+            Log.d("Check picture",getMeResponse.value.data!!.user.picture)
+            userPreferences.setPicture(getMeResponse.value.data!!.user.picture)
+            navController.navigate(Screen.UserDetail.route){
+                popUpTo(navController.graph.id){
+                    inclusive = true
+                }
+            }
+        }
+    })
+
     Box {
         Scaffold(
             snackbarHost = { SnackbarHost(snackBarHostState) }
@@ -140,7 +133,7 @@ fun CameraEditProfileScreen(
                                 Log.i("file path", imagePath.toString())
                                 val fileFromString = File(imagePath)
                                 val file = reduceFileImage(fileFromString)
-                                val rotateImage = rotateFile(file, false)
+                                val rotateImage = rotateFile(file, isBackCamera.value)
                                 Log.i("file path file", rotateImage.toString())
                                 val requestImageFile =
                                     fileFromString.asRequestBody("image/jpeg".toMediaType())
@@ -157,25 +150,6 @@ fun CameraEditProfileScreen(
                                 viewModel.homeViewModel.uploadPhotoProfile.observe(lifecycleOwner) {
                                     getMeResponse.value = it
                                 }
-                                userPreferences.setUser(
-                                    LoginData(
-                                        token = user.token,
-                                        user = LoginUser(
-                                            password = user.user.password,
-                                            id = user.user.id,
-                                            email = user.user.email,
-                                            name = user.user.name,
-                                            gender = user.user.gender,
-                                            picture = getMeResponse.value.data!!.user.picture, //error
-                                            weight = user.user.weight,
-                                            age = user.user.age,
-                                            height = user.user.height,
-                                            activity = user.user.activity,
-                                            target = user.user.target
-                                        )
-                                    )
-                                )
-                                navController.popBackStack()
 
                             }
                             val message = if (uri != null) {
@@ -207,7 +181,8 @@ fun CameraEditProfileScreen(
                                     scope.launch { snackBarHostState.showSnackbar(message) }
                                 }
                             }
-                        }
+                        },
+                        isBackCamera
                     )
                 }
             } else {
@@ -241,7 +216,8 @@ private fun CameraContent(
     modifier: Modifier = Modifier,
     onImageSaveSuccess: (Uri?) -> Unit,
     onImageSaveFailed: (Throwable) -> Unit,
-    onError: (CameraState.StateError) -> Unit
+    onError: (CameraState.StateError) -> Unit,
+    isBackCamera: MutableState<Boolean>
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -406,6 +382,7 @@ private fun CameraContent(
                     )
                 },
                 onClickFlipCamera = {
+                    isBackCamera.value = !isBackCamera.value
                     val camera = bindingCamera ?: return@CameraUiController
                     currentLensFacing =
                         if (camera.cameraInfo.lensFacing == CameraSelector.LENS_FACING_BACK) {

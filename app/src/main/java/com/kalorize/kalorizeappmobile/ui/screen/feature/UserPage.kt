@@ -1,6 +1,10 @@
 package com.kalorize.kalorizeappmobile.ui.screen.feature
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
@@ -21,9 +25,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType.Companion.Uri
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.whenResumed
+import androidx.lifecycle.withResumed
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.kalorize.kalorizeappmobile.R
@@ -34,8 +41,14 @@ import com.kalorize.kalorizeappmobile.data.remote.response.LoginUser
 import com.kalorize.kalorizeappmobile.data.remote.response.RecommendationResponse
 import com.kalorize.kalorizeappmobile.ui.navigation.Screen
 import com.kalorize.kalorizeappmobile.ui.theme.Orange1
+import com.kalorize.kalorizeappmobile.util.getPath
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import kotlin.math.roundToInt
 
 @Composable
 fun userPage(
@@ -64,8 +77,10 @@ fun userPage(
         }
     })
 
+
+
     if (isDataLoaded.value) {
-        userDetail(userDetail = getMeResponse.value, navController)
+        userDetail(userDetail = getMeResponse.value, navController, viewModel)
     } else {
         Column(
             modifier = Modifier
@@ -87,28 +102,70 @@ fun userPage(
 @Composable
 fun userDetail(
     userDetail: RecommendationResponse,
-    navController: NavController
+    navController: NavController,
+    viewModel: MainViewModel
 ) {
-
-    val picture = remember {
-        mutableStateOf("https://storage.googleapis.com/${userDetail.data!!.user.picture}")
-    }
-    Log.d("Check pic ", picture.value)
+    val context = LocalContext.current
+    val userPreferences = UserPreference(context)
+    val user = userPreferences.getUser()
     val name = userDetail.data!!.user.name
     val email = userDetail.data.user.email
     val age = remember {
-        mutableStateOf(userDetail.data.user.age.toString())
+        mutableStateOf(user.user.age!!.roundToInt().toString())
     }
     val gender = userDetail.data.user.gender
     val weight = remember {
-        mutableStateOf(userDetail.data.user.weight.toString())
+        mutableStateOf(user.user.weight!!.toString())
     }
     val height = remember {
-        mutableStateOf(userDetail.data.user.height)
+        mutableStateOf(user.user.weight!!.roundToInt().toString())
     }
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+    val lifecycle = LocalLifecycleOwner.current
+    val getMeResponse = remember {
+        mutableStateOf(RecommendationResponse(null, ""))
+    }
 
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()){uri ->
+        if (uri != null){
+            val imagePath = getPath(context , uri)
+            val fileFromString = File(imagePath!!)
+            val requestImageFile =
+                fileFromString.asRequestBody("image/jpeg".toMediaType())
+            val imageMultipart: MultipartBody.Part =
+                MultipartBody.Part.createFormData(
+                    "picture",
+                    fileFromString.name,
+                    requestImageFile
+                )
+            viewModel.homeViewModel.uploadPhotoProfile(user.token, imageMultipart)
+            viewModel.homeViewModel.uploadPhotoProfile.observe(lifecycle) {
+                getMeResponse.value = it
+            }
+
+        }
+    }
+
+    LaunchedEffect(key1 = getMeResponse.value, block = {
+        if (getMeResponse.value.data != null){
+            Log.d("Check picture",getMeResponse.value.data!!.user.picture)
+            userPreferences.setPicture(getMeResponse.value.data!!.user.picture)
+            navController.navigate(Screen.UserDetail.route){
+                popUpTo(navController.graph.id){
+                    inclusive = true
+                }
+            }
+        }
+    })
+
+    BackHandler {
+        navController.navigate(Screen.Home.route){
+            popUpTo(navController.graph.id){
+                inclusive = true
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,7 +179,11 @@ fun userDetail(
                     tint = Color(red = 243, green = 73, blue = 23),
                     modifier = Modifier
                         .clickable {
-                            navController.popBackStack()
+                            navController.navigate(Screen.Home.route){
+                                popUpTo(navController.graph.id){
+                                    inclusive = true
+                                }
+                            }
                         }
                 )
             },
@@ -150,7 +211,7 @@ fun userDetail(
                         .size(140.dp)
                         .clip(CircleShape)
                         .border(BorderStroke(0.1.dp, Color.Black), CircleShape),
-                    model = picture.value,
+                    model = user.user.picture,
                     contentDescription = "User Picture",
                     contentScale = ContentScale.Crop,
                     error = painterResource(id = R.drawable.person),
@@ -208,6 +269,7 @@ fun userDetail(
                                 Color(0xFFF94917)
                             ),
                             onClick = {
+                                      galleryLauncher.launch("image/*")
                             },
                         ) {
                             Text(text = "Gallery")

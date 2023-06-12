@@ -14,14 +14,13 @@ import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.changepassw
 import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.otp.OtpScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.forgotopassword.reinputemail.ReInputEmailScreen
 import com.kalorize.kalorizeappmobile.ui.screen.auth.login.LoginScreen
-import com.kalorize.kalorizeappmobile.ui.screen.feature.HomeScreen
+import com.kalorize.kalorizeappmobile.ui.screen.feature.*
 import com.kalorize.kalorizeappmobile.ui.screen.feature.camera.PermissionCameraScreen
-import com.kalorize.kalorizeappmobile.ui.screen.feature.foodDetail
+import com.kalorize.kalorizeappmobile.ui.screen.feature.editprofile.PermissionCameraEditScreen
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire1
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire2
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.Questionnaire3
 import com.kalorize.kalorizeappmobile.ui.screen.feature.questionnaire.QuestionnaireSuccess
-import com.kalorize.kalorizeappmobile.ui.screen.feature.userPage
 import com.kalorize.kalorizeappmobile.ui.screen.onboarding.OnBoardingScreen
 import com.kalorize.kalorizeappmobile.vm.MainViewModel
 
@@ -45,7 +44,7 @@ fun SetupNavGraph(
             LoginScreen(viewModel = viewModel, navHostController = navController)
         }
         composable(route = Screen.Home.route) {
-            HomeScreen(navController = navController , viewModel)
+            HomeScreen(navController = navController, viewModel)
         }
         composable(route = Screen.Register.route) {
             RegisterScreen(navHostController = navController, viewModel = viewModel)
@@ -72,20 +71,17 @@ fun SetupNavGraph(
         }
         composable(
             route = Screen.FoodDetail.route,
-            arguments = listOf(navArgument("id") {type = NavType.StringType})
-        ){
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) {
             val id = it.arguments?.getString("id") ?: "-1"
-            foodDetail(viewModel = viewModel, foodId = id , navigateBack = {
+            foodDetail(viewModel = viewModel, foodId = id, navigateBack = {
                 navController.navigateUp()
-            } )
+            })
         }
-
         composable(
             route = Screen.UserDetail.route
         ) {
-            userPage(viewModel = viewModel, navigateBack = {
-                navController.navigateUp()
-            })
+            userPage(viewModel = viewModel, navController)
         }
         composable(
             route = Screen.Questionnare1.route
@@ -100,7 +96,7 @@ fun SetupNavGraph(
         composable(
             route = Screen.Questionnare3.route
         ) {
-            Questionnaire3(navController,viewModel)
+            Questionnaire3(navController, viewModel)
         }
         composable(
             route = Screen.QuestionnareSuccess.route
@@ -111,6 +107,21 @@ fun SetupNavGraph(
             route = Screen.Camera.route
         ) {
             PermissionCameraScreen(navController, viewModel)
+        }
+        composable(
+            route = Screen.EditProfile.route
+        ){
+            EditProfileScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screen.EditPaswword.route
+        ){
+            EditPasswordScreen(navController = navController, viewModel = viewModel)
+        }
+        composable(
+            route = Screen.CameraEdit.route
+        ){
+            PermissionCameraEditScreen(navController = navController, viewModel = viewModel)
         }
     }
 }

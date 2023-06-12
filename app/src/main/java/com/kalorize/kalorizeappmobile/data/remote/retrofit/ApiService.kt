@@ -97,4 +97,28 @@ interface ApiService {
         @Part("target") target: RequestBody,
     ): Result<RecommendationResponse>
 
+    @Multipart
+    @PUT("v1/user")
+    suspend fun editPhotoProfile(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
+    ): Result<RecommendationResponse>
+
+    @Multipart
+    @PUT("v1/user")
+    suspend fun editProfile(
+        @Header("Authorization") token: String,
+        @Part("name") name: RequestBody,
+        @Part("age") age: Float,
+        @Part("gender") gender: RequestBody,
+        @Part("weight") weight: Float,
+        @Part("height") height: Float,
+    ): Result<RecommendationResponse>
+
+    @Multipart
+    @PUT("v1/user")
+    suspend fun editPassword(
+        @Header("Authorization") token: String,
+        @Part("password") password: RequestBody,
+    ): Result<RecommendationResponse>
 }

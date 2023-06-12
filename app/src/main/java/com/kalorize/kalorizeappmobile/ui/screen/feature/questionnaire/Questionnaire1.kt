@@ -113,14 +113,14 @@ fun Questionnaire1(
                             Modifier
                                 .offset(0.dp, 0.dp)
                                 .height(50.dp)
-                                .width(200.dp)
+                                .width(180.dp)
                         else ->
                             Modifier
                                 .offset(
                                     (-1 * 1).dp, 0.dp
                                 )
                                 .height(50.dp)
-                                .width(200.dp)
+                                .width(180.dp)
                     },
                     shape = when (text) {
                         "Male" -> RoundedCornerShape(

@@ -23,7 +23,7 @@ data class Reccomendation(
 	val id: Int,
 
 	@field:SerializedName("calories")
-	val calories: Any,
+	val calories: Float,
 
 	@field:SerializedName("breakfast")
 	val breakfast: List<FoodItem>,
@@ -50,7 +50,7 @@ data class FoodItem(
 	val cookTime: String,
 
 	@field:SerializedName("calories")
-	val calories: Any,
+	val calories: Float,
 
 	@field:SerializedName("carbohydrate")
 	val carbohydrate: Any,
@@ -65,7 +65,7 @@ data class FoodItem(
 	val sodium: Any,
 
 	@field:SerializedName("protein")
-	val protein: Any,
+	val protein: Float,
 
 	@field:SerializedName("imageUrl")
 	val imageUrl: String,

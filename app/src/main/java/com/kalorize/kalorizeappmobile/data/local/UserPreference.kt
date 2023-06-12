@@ -1,6 +1,7 @@
 package com.kalorize.kalorizeappmobile.data.local
 
 import android.content.Context
+import android.util.Log
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginData
 import com.kalorize.kalorizeappmobile.data.remote.response.LoginUser
 
@@ -15,7 +16,9 @@ internal class UserPreference(context: Context) {
         editor.putString(EMAIL, value.user.email)
         editor.putString(PASSWORD, value.user.password)
         editor.putString(NAME, value.user.name)
-        editor.putString(USER_PICTURE, "https://storage.googleapis.com/${value.user.picture}")
+        if (value.user.picture != null){
+            editor.putString(USER_PICTURE, "https://storage.googleapis.com/${value.user.picture}")
+        }
         editor.putString(GENDER, value.user.gender)
         editor.putFloat(WEIGHT, value.user.weight ?: 0.toFloat())
         editor.putFloat(AGE, value.user.age ?: 0.toFloat())
@@ -52,6 +55,13 @@ internal class UserPreference(context: Context) {
     fun setActivity(activity: String) {
         val sharedPreferences = preference.edit()
         sharedPreferences.putString("activity-profiling", activity)
+        sharedPreferences.apply()
+    }
+
+    fun setPicture(picture: String){
+        val sharedPreferences = preference.edit()
+        Log.d("Check Saved picture" , picture)
+        sharedPreferences.putString(USER_PICTURE, "https://storage.googleapis.com/$picture")
         sharedPreferences.apply()
     }
 

@@ -3,6 +3,7 @@ package com.kalorize.kalorizeappmobile.ui.screen.feature
 
 import android.app.DatePickerDialog
 import android.os.Build
+import android.util.Log
 import android.widget.DatePicker
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
@@ -58,6 +59,7 @@ fun HomeScreen(
         )
     }
     val user = userPreferences.getUser()
+    Log.d("Check user picture" , user.user.picture!!)
     val date = remember {
         mutableStateOf("$year-${month + 1}-$dayOfMonth")
     }

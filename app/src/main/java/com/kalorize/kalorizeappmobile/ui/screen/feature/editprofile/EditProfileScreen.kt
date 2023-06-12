@@ -388,7 +388,7 @@ fun editProfileDetail(
                     Log.i("Weight", weightState.value.toString())
                     Log.i("Height", heightState.value.toString())
                     val name = fullNameState.value.toRequestBody("text/plain".toMediaType())
-                    val gender = selectedOption.value.toRequestBody("text/plain".toMediaType())
+                    val gender = selectedOption.value.uppercase().toRequestBody("text/plain".toMediaType())
                     viewModel.homeViewModel.editProfile(
                         token = token,
                         name = name,
@@ -404,7 +404,7 @@ fun editProfileDetail(
                             user.user.weight
                         })!!),
                         height = ((if (heightState.value != "") {
-                            heightState.toString().toFloat()
+                            heightState.value.toFloat()
                         } else {
                             user.user.height
                         })!!)
@@ -421,8 +421,8 @@ fun editProfileDetail(
                                         id = user.user.id,
                                         email = user.user.email,
                                         name = fullNameState.value,
-                                        gender = selectedOption.value,
-                                        picture = user.user.picture,
+                                        gender = selectedOption.value.uppercase(),
+                                        picture = null,
                                         weight = ((if (weightState.value != "") {
                                             weightState.value.toFloat()
                                         } else {
@@ -443,7 +443,11 @@ fun editProfileDetail(
                                     )
                                 )
                             )
-                            navController.popBackStack()
+                            navController.navigate(Screen.UserDetail.route){
+                                popUpTo(navController.graph.id){
+                                    inclusive = true
+                                }
+                            }
                         } else {
                             isLoading.value = false
                             Toast.makeText(context, it.status, Toast.LENGTH_SHORT).show()

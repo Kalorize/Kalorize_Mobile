@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -79,6 +80,10 @@ fun recommendationPage(
     val dinnerCalories = remember { mutableStateOf(0f) }
     val dinnerProtein = remember { mutableStateOf(0f) }
 
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+
     viewModel.homeViewModel.getRecommendation(user.token)
     viewModel.homeViewModel.recommendation.observe(lifecycle) {
         recommendation.value = it
@@ -118,7 +123,7 @@ fun recommendationPage(
                     .background(color = LightGrey)
                     .padding(vertical = 15.dp, horizontal = 30.dp)
                     .fillMaxWidth()
-                    .height(330.dp),
+                    .height(screenHeight / 2.4f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
@@ -126,13 +131,21 @@ fun recommendationPage(
                     contentDescription = "breakfast_bed",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .height(height = 250.dp)
+                        .height(height = screenHeight / 3.5f)
                 )
-                Text(
-                    text = "Jangan Lupa Pilih Variasi Makanmu Ya!",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ){
+                    Text(
+                        text = "Jangan Lupa Pilih Variasi Makanmu Ya!",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
                     onClick = {
@@ -165,9 +178,10 @@ fun recommendationPage(
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(color = LightGrey)
                         .padding(vertical = 15.dp, horizontal = 30.dp)
-                        .width(115.dp)
-                        .height(70.dp),
-                    horizontalAlignment = Alignment.Start
+                        .width(screenWidth / 3.5f)
+                        .height(90.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Text(text = "Calories")
                     Row() {
@@ -210,9 +224,10 @@ fun recommendationPage(
                         .clip(shape = RoundedCornerShape(20.dp))
                         .background(color = LightGrey)
                         .padding(vertical = 15.dp, horizontal = 30.dp)
-                        .width(115.dp)
-                        .height(70.dp),
-                    horizontalAlignment = Alignment.Start
+                        .width(screenWidth / 3.5f)
+                        .height(90.dp),
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Text(text = "Protein")
                     Row() {
@@ -230,6 +245,8 @@ fun recommendationPage(
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp
                             ),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                     Text(

@@ -89,15 +89,19 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
+                Box(
                     modifier = Modifier
-                        .align(Alignment.Start),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    text = "Hey ${user.user.name} \uD83D\uDC4B"
-                )
+                        .width(width = 250.dp),
+                    contentAlignment = Alignment.CenterStart
+                ){
+                    Text(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        text = "Hey ${user.user.name} \uD83D\uDC4B"
+                    )
+                }
 
                 Text(
                     modifier = Modifier
